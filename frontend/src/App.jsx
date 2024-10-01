@@ -12,7 +12,6 @@ import Profile from "./pages/user/profile/Profile";
 import UserGarbageRequest from "./pages/user/profile/UserGarbageRequest";
 import AdminInquiryUpdate from "./pages/admin/inquiries/AdminInquiryUpdate";
 import UserInquiryRequest from "./pages/user/profile/UserInquiryRequest";
-import UserProfile from "./pages/user/profile/Profile";
 
 
 function App() {
@@ -27,7 +26,7 @@ function App() {
           <Route exact path="/user/dashboard" Component={Profile} />
           <Route exact path="/user/my-garbage" Component={UserGarbageRequest} />
           <Route exact path="/user/my-inquiry" Component={UserInquiryRequest} />
-          <Route exact path="/profile" Component={UserProfile} />
+          <Route exact path="/profile" Component={Profile} />
 
           {/* Admin Route */}
           <Route exact path="/admin" Component={Dashboard} />

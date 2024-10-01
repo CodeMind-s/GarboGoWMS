@@ -6,6 +6,10 @@ import AuthService from "../../../api/userApi";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [username, setUserName] = useState("");
+  // const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
 
@@ -14,13 +18,16 @@ function Register() {
     email: "",
     password: "",
     gender: "",
-    ecoscore: "150", // Default ecoscore
+    ecoscore: "",
     address: "",
     contact: "",
-    confirmPassword: "", // Add confirmPassword here
   });
 
-  const { username, email, password, gender, address, contact, confirmPassword } = userEntryData;
+  const { username, email, password, gender, ecoscore, address, contact } =
+    userEntryData;
+
+  const [touched, setTouched] = useState({});
+  const [isSubmit, setIsSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -34,11 +41,6 @@ function Register() {
     e.preventDefault();
     setIsLoading(true);
 
-    if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!");
-      setIsLoading(false);
-      return;
-    }
     const newUserEntry = {
       username,
       email,
@@ -49,7 +51,10 @@ function Register() {
       contact,
     };
     try {
-      await AuthService.register(newUserEntry);
+      // Simulate submission (you could replace this with your API call)
+      // console.log(`newUserEntry => `, newUserEntry);
+      await AuthService.register(newUserEntry); // Assuming you have this function
+
       toast.success("Your Account has been created successfully!", {
         position: "bottom-right",
         autoClose: 5000,
@@ -60,68 +65,73 @@ function Register() {
         progress: undefined,
         theme: "light",
       });
-      navigate("/login"); // Navigate to login page after successful registration
+      setIsSubmit(true);
     } catch (error) {
       console.error("Error creating account:", error);
       toast.error("Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);
+      // navigate("/login");
     }
   };
 
   return (
-    <section className="bg-gray-50 flex flex-col items-center justify-center px-6 py-8 mx-auto">
-      <a
-        href="#"
-        className="flex items-center mb-6 text-2xl font-semibold text-gray-900 :text-white justify-center"
-      >
-        <img className="w-52" src={logo} alt="Logo" />
-      </a>
-      <div className="w-[70%] bg-white rounded-lg shadow :border :bg-gray-800 :border-gray-700">
-        <div className="p-6 sm:p-8">
-          <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl :text-white text-center">
-            Sign Up
-          </h1>
-          <form className="w-full flex justify-between my-4" onSubmit={handleSubmit}>
-            <div className="w-[45%] space-y-4">
-              <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+    <div>
+      <section className="bg-transparent w-screen h-auto flex justify-center items-center z-50">
+        <div className="bg-[#252525] w-[40%] h-auto my-8 rounded-3xl shadow-lg shadow-gray-900 p-8">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col items-center justify-between"
+          >
+            <div>
+              <img src={logo} alt="Logo" className="mx-auto w-[80%] " />
+            </div>
+            <h1 className="text-center font-bold text-[36px] text-[#f9da78] mb-8">
+              Sign Up
+            </h1>
+
+            <div className="w-[80%] flex flex-col justify-between">
+              <div className="my-2">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-white"
+                >
                   Name
                 </label>
                 <input
                   type="text"
-                  name="username"
                   id="name"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
+                  name="username"
+                  className="mt-1 p-2 border rounded w-full"
                   placeholder="Enter name"
-                  required
                   value={username}
                   onChange={handleChange}
+                  // onChange={(e) => setUserName(e.target.value)}
                 />
               </div>
-
-              <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+              <div className="my-2">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-white"
+                >
                   Email Address
                 </label>
                 <input
                   type="email"
-                  name="email"
                   id="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
-                  placeholder="name@company.com"
-                  required
+                  name="email"
+                  className="mt-1 p-2 border rounded w-full"
                   value={email}
+                  placeholder="Enter Email Address"
                   onChange={handleChange}
+                  // onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-
-              {/* Gender Input */}
-              <div>
-                <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+              <div className="my-2">
+                <label className="block text-sm font-medium text-white">
                   Gender
                 </label>
-                <div className="flex space-x-4">
+                <div className="mt-1">
                   <label className="inline-flex items-center">
                     <input
                       type="radio"
@@ -129,113 +139,118 @@ function Register() {
                       value="Male"
                       className="form-radio text-blue-600"
                       checked={gender === "Male"}
-                      onChange={handleChange}
+                      onChange={handleChange} // Handles the change event
                     />
-                    <span className="ml-2 text-gray-900 :text-white">Male</span>
+                    <span className="ml-2 text-white">Male</span>
                   </label>
-                  <label className="inline-flex items-center">
+                  <label className="inline-flex items-center ml-6">
                     <input
                       type="radio"
                       name="gender"
                       value="Female"
                       className="form-radio text-blue-600"
                       checked={gender === "Female"}
-                      onChange={handleChange}
+                      onChange={handleChange} // Handles the change event
                     />
-                    <span className="ml-2 text-gray-900 :text-white">Female</span>
+                    <span className="ml-2 text-white">Female</span>
                   </label>
                 </div>
               </div>
-
-              {/* Address Input */}
-              <div>
-                <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+              <div className="my-2">
+                <label
+                  htmlFor="address"
+                  className="block text-sm font-medium text-white"
+                >
                   Address
                 </label>
                 <input
                   type="text"
-                  name="address"
                   id="address"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
-                  placeholder="Enter Address"
-                  required
+                  name="address"
+                  className="mt-1 p-2 border rounded w-full"
                   value={address}
+                  placeholder="Enter current Address"
                   onChange={handleChange}
+                  // onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-            </div>
-
-            <div className="w-[45%] space-y-4">
-              {/* Contact Input */}
-              <div>
-                <label htmlFor="contact" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+              <div className="my-2">
+                <label
+                  htmlFor="contact"
+                  className="block text-sm font-medium text-white"
+                >
                   Contact
                 </label>
                 <input
                   type="text"
-                  name="contact"
                   id="contact"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
-                  placeholder="Enter Contact Number"
-                  required
+                  name="contact"
+                  className="mt-1 p-2 border rounded w-full"
                   value={contact}
+                  placeholder="Enter Contact Number"
                   onChange={handleChange}
+                  // onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-
-              {/* Password Input */}
-              <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+              <div className="my-2">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-white"
+                >
                   Password
                 </label>
                 <input
                   type="password"
-                  name="password"
                   id="password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
-                  placeholder="••••••••"
-                  required
+                  name="password"
+                  className="mt-1 p-2 border rounded w-full"
                   value={password}
+                  placeholder="Enter Password"
                   onChange={handleChange}
+                  // onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-
-              {/* Confirm Password Input */}
-              <div>
-                <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+              <div className="my-2">
+                {/* <label
+                  htmlFor="confirmpassword"
+                  className="block text-sm font-medium text-white"
+                >
                   Confirm Password
-                </label>
-                <input
+                </label> */}
+                {/* <input
                   type="password"
-                  name="confirmPassword"
-                  id="confirm-password"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
-                  placeholder="••••••••"
-                  required
+                  id="confirmpassword"
+                  className="mt-1 p-2 border rounded w-full"
+                  placeholder="Confirm password"
                   value={confirmPassword}
-                  onChange={handleChange}
-                />
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                /> */}
               </div>
-
-              <button
-                type="submit"
-                className="w-full mt-8 text-white bg-[#527436] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center :bg-primary-600 :hover:bg-primary-700 :focus:ring-primary-800"
-                disabled={isLoading}
-              >
-                {isLoading ? "Loading..." : "Create an account"}
-              </button>
-              <p className="text-sm font-light text-gray-500">
-                Already have an account?{" "}
-                <Link to="/login" className="font-medium text-primary-600 hover:underline">
-                  Login here
-                </Link>
-              </p>
+              <div className="flex">
+                <p className="text-[#f9da78]">
+                  Already have an account?{" "}
+                  <Link to="/login" className="text-[#48752c] hover:underline">
+                    Login
+                  </Link>
+                </p>
+              </div>
             </div>
+            {errorMessage && (
+              <p className="text-red-500 text-center">{errorMessage}</p>
+            )}
+
+            <button
+              type="submit"
+              className="bg-[#48752c] text-[#f9da78] p-2 my-8 text-[24px] w-[50%] rounded cursor-pointer"
+              isLoading={isLoading}
+            >
+              Sign Up
+              <ToastContainer />
+            </button>
           </form>
         </div>
-      </div>
-      <ToastContainer />
-    </section>
+      </section>
+    </div>
   );
 }
 

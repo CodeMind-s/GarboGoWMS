@@ -5,7 +5,6 @@ import { updateGarbage } from "../../../api/garbageApi"; // Update the path acco
 import { ToastContainer, toast } from "react-toastify";
 import GarbageDisplayMap from "./GarbageDisplayMap";
 
-
 const AdminGarbageUpdate = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -13,7 +12,6 @@ const AdminGarbageUpdate = () => {
   const [lat, setLat] = useState(location.state.garbage.latitude);
   const [lon, setLon] = useState(location.state.garbage.longitude);
   const [type, setType] = useState(location.state.garbage.typeOfGarbage);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -37,7 +35,6 @@ const AdminGarbageUpdate = () => {
       setTimeout(() => {
         navigate("/admin/garbage");
       }, 2000); // Adjust the delay as needed (3000ms = 3 seconds)
-
     } catch (error) {
       console.error("Error updating garbage status:", error.message);
       // Optionally, you can show an error message to the user here
@@ -46,8 +43,12 @@ const AdminGarbageUpdate = () => {
 
   return (
     <ResponsiveDrawer>
-      <div className="grid grid-cols-2 gap-0"> 
-      <GarbageDisplayMap garbagelat={lat} garbagelon={lon} garbagetype={type}/>
+      <div className="grid grid-cols-2 gap-0">
+        <GarbageDisplayMap
+          garbagelat={lat}
+          garbagelon={lon}
+          garbagetype={type}
+        />
         <div className="max-w mx-auto p-6 bg-white rounded-lg shadow-md">
           <h2 className="text-xl font-semibold mb-4">Update Garbage Status</h2>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -56,7 +57,7 @@ const AdminGarbageUpdate = () => {
                 <label className="block text-gray-700">Name</label>
                 <input
                   type="text"
-                  value={location.state.garbage.name}
+                  value={location.state.garbage.user.username}
                   readOnly
                   className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100"
                 />
@@ -76,7 +77,6 @@ const AdminGarbageUpdate = () => {
               <input
                 type="text"
                 value={location.state.garbage.address}
-
                 readOnly
                 className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-gray-100"
               />
@@ -113,7 +113,6 @@ const AdminGarbageUpdate = () => {
           </form>
         </div>
       </div>
-
 
       <ToastContainer />
     </ResponsiveDrawer>

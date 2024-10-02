@@ -1,98 +1,129 @@
 import React from "react";
 import ResponsiveDrawer from "../components/ResposiveDrawer";
+import { useEffect, useState } from "react";
+import { getAllGarbages } from "../../../api/garbageApi";
+import AuthService from "../../../api/userApi";
+import { getAllInquiries } from "../../../api/inquiryApi";
+import { getAllTrucks } from "../../../api/truckApi";
+
+// MUI Icons
+import GroupIcon from "@mui/icons-material/Group";
+import LocalShippingIcon from "@mui/icons-material/LocalShipping";
+import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import Map from "../components/Map";
 
 const Dashboard = () => {
+  const [userCount, setUserCount] = useState(0);
+  const [garbageCount, setGarbageCount] = useState(0);
+  const [truckCount, setTruckCount] = useState(0);
+  const [inquiryCount, setInquiryCount] = useState(0);
+
+  const fetchAllUsers = async () => {
+    try {
+      const res = await AuthService.getAllUsers(); // Call the API to fetch users
+      setUserCount(res.length); // Assuming res is an array of users
+    } catch (error) {
+      alert(error.message);
+      console.error("Error fetching users: ", error.message);
+    }
+  };
+
+  const fetchAllGarbages = async () => {
+    try {
+      const res = await getAllGarbages();
+      setGarbageCount(res.length); // Assuming res is an array of garbages
+    } catch (error) {
+      alert(error.message);
+      console.error("Error fetching garbages: ", error.message);
+    }
+  };
+
+  const fetchAllTrucks = async () => {
+    try {
+      const res = await getAllTrucks();
+      setTruckCount(res.length); // Assuming res is an array of trucks
+    } catch (error) {
+      alert(error.message);
+      console.error("Error fetching trucks: ", error.message);
+    }
+  }; // Fetch all trucks
+
+  const fetchAllInquiries = async () => {
+    try {
+      const res = await getAllInquiries(); // Call the API to fetch inquiries
+      setInquiryCount(res.length); // Assuming res is an array of inquiries
+    } catch (error) {
+      alert(error.message);
+      console.error("Error fetching inquiries: ", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllUsers();
+    fetchAllGarbages();
+    fetchAllTrucks();
+    fetchAllInquiries();
+  }, []);
+
   return (
     <ResponsiveDrawer>
-      <div className="w-full grid grid-cols-1 gap-4 px-4 mt-8 sm:grid-cols-4 sm:px-8">
-        <div className="w-full flex items-center bg-white border rounded-sm overflow-hidden shadow">
-          <div className="p-4 bg-green-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              ></path>
-            </svg>
+      <div className="w-full grid grid-cols-1 gap-6 px-5 my-8 sm:grid-cols-2 sm:px-8 h-[200px]">
+        <div className="w-full flex items-center bg-white border rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+          <div className="p-8 h-full bg-green-500 flex justify-center items-center">
+            <GroupIcon style={{ fontSize: 50 }} className="text-white" />
           </div>
-          <div className="px-4 text-gray-700">
-            <h3 className="text-sm tracking-wider">Total Member</h3>
-            <p className="text-3xl">12,768</p>
+          <div className="px-5 text-gray-700 flex items-center justify-between w-full">
+            <h3 className="text-sm font-semibold tracking-wider">
+              Total Users
+            </h3>
+            <p className="text-5xl font-bold">{userCount}</p>
           </div>
         </div>
-        <div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
-          <div className="p-4 bg-blue-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"
-              ></path>
-            </svg>
+        <div className="w-full flex items-center bg-white border rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+          <div className="p-8 h-full bg-blue-500 flex justify-center items-center">
+            <DeleteSweepIcon style={{ fontSize: 50 }} className=" text-white" />
           </div>
-          <div className="px-4 text-gray-700">
-            <h3 className="text-sm tracking-wider">Total Post</h3>
-            <p className="text-3xl">39,265</p>
+          <div className="px-4 text-gray-700 flex items-start justify-between w-full">
+            <h3 className="text-sm font-semibold tracking-wider">
+              Total Garbage Requests
+            </h3>
+            <p className="text-5xl font-bold">{garbageCount}</p>
           </div>
         </div>
-        <div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
-          <div className="p-4 bg-indigo-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-              ></path>
-            </svg>
+        <div className="w-full flex items-center bg-white border rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+          <div className="p-8 h-full bg-indigo-500 flex justify-center items-center">
+            <LocalShippingIcon
+              style={{ fontSize: 50 }}
+              className="text-white"
+            />
           </div>
-          <div className="px-4 text-gray-700">
-            <h3 className="text-sm tracking-wider">Total Comment</h3>
-            <p className="text-3xl">142,334</p>
+          <div className="px-5 text-gray-700 flex items-start justify-between w-full">
+            <h3 className="text-sm font-semibold tracking-wider ">
+              Total Trucks
+            </h3>
+            <p className="text-5xl font-bold">{truckCount}</p>
           </div>
         </div>
-        <div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
-          <div className="p-4 bg-red-400">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-white"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"
-              ></path>
-            </svg>
+        <div className="w-full flex items-center bg-white border rounded-lg overflow-hidden shadow-lg transform transition-transform hover:scale-105">
+          <div className="p-8 h-full bg-red-500 flex justify-center items-center">
+            <SupportAgentIcon
+              style={{ fontSize: 50 }}
+              className=" text-white"
+            />
           </div>
-          <div className="px-4 text-gray-700">
-            <h3 className="text-sm tracking-wider">Server Load</h3>
-            <p className="text-3xl">34.12%</p>
+          <div className="px-5 text-gray-700 flex items-start justify-between w-full">
+            <h3 className="text-sm font-semibold tracking-wider">
+              Total Inquiries
+            </h3>
+            <p className="text-5xl font-bold">{inquiryCount}</p>
           </div>
         </div>
+      </div>
+      <div className="m-8 flex gap-y-3 flex-col">
+        <span className="font-semibold text-xl">Live Garbage Requests</span>
+        {/* <br /> */}
+        <Map />
       </div>
     </ResponsiveDrawer>
   );

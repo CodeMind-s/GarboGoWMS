@@ -13,7 +13,6 @@ import UserGarbageRequest from "./pages/user/profile/UserGarbageRequest";
 import AdminInquiryUpdate from "./pages/admin/inquiries/AdminInquiryUpdate";
 import UserInquiryRequest from "./pages/user/profile/UserInquiryRequest";
 
-
 function App() {
   return (
     <>

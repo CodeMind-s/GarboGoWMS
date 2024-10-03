@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [errorMessage, setErrorMessage] = useState(null);
+  const [imageSelected,setImageSelected] = useState("");
+  const [uploadImageUrl, setUploadImageUrl] = useState("");
   const navigate = useNavigate();
 
   const [userEntryData, setUserEntryData] = useState({
@@ -17,10 +19,18 @@ function Register() {
     ecoscore: "150", // Default ecoscore
     address: "",
     contact: "",
-    confirmPassword: "", // Add confirmPassword here
+    confirmPassword: "",
   });
 
-  const { username, email, password, gender, address, contact, confirmPassword } = userEntryData;
+  const {
+    username,
+    email,
+    password,
+    gender,
+    address,
+    contact,
+    confirmPassword,
+  } = userEntryData;
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -33,12 +43,18 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+    setErrorMessage(null); 
 
     if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!");
+      setErrorMessage("Passwords do not match!"); 
       setIsLoading(false);
       return;
     }
+
+    let uploadedImageUrl; 
+   
+    uploadedImageUrl = await uploadImage(); 
+    console.log(uploadedImageUrl);
     const newUserEntry = {
       username,
       email,
@@ -47,9 +63,13 @@ function Register() {
       ecoscore: "150",
       address,
       contact,
+      profileImage: uploadedImageUrl,
     };
+
     try {
+      console.log(newUserEntry);
       await AuthService.register(newUserEntry);
+      
       toast.success("Your Account has been created successfully!", {
         position: "bottom-right",
         autoClose: 5000,
@@ -60,7 +80,7 @@ function Register() {
         progress: undefined,
         theme: "light",
       });
-      navigate("/login"); // Navigate to login page after successful registration
+      navigate("/login");
     } catch (error) {
       console.error("Error creating account:", error);
       toast.error("Failed to create account. Please try again.");
@@ -68,6 +88,25 @@ function Register() {
       setIsLoading(false);
     }
   };
+
+  const uploadImage = async() => {
+    const data = new FormData();
+    data.append("file", imageSelected);
+    data.append(
+      "upload_preset","GarboGoUser_Preset"
+    );
+    data.append("cloud_name","dg8cpnx1m");
+
+      console.log("reached uploadimage");
+
+      const res = await fetch("https://api.cloudinary.com/v1_1/dg8cpnx1m/image/upload",{
+        method:"POST",
+        body:data
+      })
+
+      const imageUrl = await res.json()
+      return imageUrl.url; 
+  }
 
   return (
     <section className="bg-gray-50 flex flex-col items-center justify-center px-6 py-8 mx-auto">
@@ -82,10 +121,16 @@ function Register() {
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl :text-white text-center">
             Sign Up
           </h1>
-          <form className="w-full flex justify-between my-4" onSubmit={handleSubmit}>
+          <form
+            className="w-full flex justify-between my-4"
+            onSubmit={handleSubmit}
+          >
             <div className="w-[45%] space-y-4">
               <div>
-                <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
                   Name
                 </label>
                 <input
@@ -101,7 +146,10 @@ function Register() {
               </div>
 
               <div>
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
                   Email Address
                 </label>
                 <input
@@ -116,40 +164,14 @@ function Register() {
                 />
               </div>
 
-              {/* Gender Input */}
-              <div>
-                <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
-                  Gender
-                </label>
-                <div className="flex space-x-4">
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="Male"
-                      className="form-radio text-blue-600"
-                      checked={gender === "Male"}
-                      onChange={handleChange}
-                    />
-                    <span className="ml-2 text-gray-900 :text-white">Male</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                    <input
-                      type="radio"
-                      name="gender"
-                      value="Female"
-                      className="form-radio text-blue-600"
-                      checked={gender === "Female"}
-                      onChange={handleChange}
-                    />
-                    <span className="ml-2 text-gray-900 :text-white">Female</span>
-                  </label>
-                </div>
-              </div>
+              
 
               {/* Address Input */}
               <div>
-                <label htmlFor="address" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+                <label
+                  htmlFor="address"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
                   Address
                 </label>
                 <input
@@ -163,13 +185,13 @@ function Register() {
                   onChange={handleChange}
                 />
               </div>
-            </div>
-
-            <div className="w-[45%] space-y-4">
               {/* Contact Input */}
               <div>
-                <label htmlFor="contact" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
-                  Contact
+                <label
+                  htmlFor="contact"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
+                  Contact Number
                 </label>
                 <input
                   type="text"
@@ -178,14 +200,77 @@ function Register() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
                   placeholder="Enter Contact Number"
                   required
+                  pattern="\d{10}"
+                  minLength={10}
+                  maxLength={10}
                   value={contact}
                   onChange={handleChange}
                 />
               </div>
+            </div>
+
+            <div className="w-[45%] space-y-4">
+            {/* Gender Input */}
+            <div>
+                <label
+                  htmlFor="gender"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
+                  Gender
+                </label>
+                <div className="flex space-x-4">
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Male"
+                      className="form-radio text-blue-600"
+                      checked={gender === "Male"}
+                      onChange={handleChange}
+                      required
+                    />
+                    <span className="ml-2 text-gray-900 :text-white">Male</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                    <input
+                      type="radio"
+                      name="gender"
+                      value="Female"
+                      className="form-radio text-blue-600"
+                      checked={gender === "Female"}
+                      onChange={handleChange}
+                      required
+                    />
+                    <span className="ml-2 text-gray-900 :text-white">
+                      Female
+                    </span>
+                  </label>
+                </div>
+              </div>
+             {/* Image Input */}
+            <div>
+                <label
+                  htmlFor="contact"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
+                  Upload Profile Image
+                </label>
+                <input
+                  type="file"
+                  name="image"
+                  id="image"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
+                  onChange={(e) => setImageSelected(e.target.files[0])}
+                />
+              </div>
+              
 
               {/* Password Input */}
               <div>
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
                   Password
                 </label>
                 <input
@@ -202,7 +287,10 @@ function Register() {
 
               {/* Confirm Password Input */}
               <div>
-                <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-gray-900 :text-white">
+                <label
+                  htmlFor="confirm-password"
+                  className="block mb-2 text-sm font-medium text-gray-900 :text-white"
+                >
                   Confirm Password
                 </label>
                 <input
@@ -217,21 +305,29 @@ function Register() {
                 />
               </div>
 
+              {/* Error Message Display */}
+              {errorMessage && (
+                <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
+              )}
+
               <button
                 type="submit"
-                className="w-full mt-8 text-white bg-[#527436] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center :bg-primary-600 :hover:bg-primary-700 :focus:ring-primary-800"
+                className="w-full mt-8 text-white bg-[#527436] hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center"
                 disabled={isLoading}
               >
                 {isLoading ? "Loading..." : "Create an account"}
               </button>
-              <p className="text-sm font-light text-gray-500">
-                Already have an account?{" "}
-                <Link to="/login" className="font-medium text-primary-600 hover:underline">
-                  Login here
-                </Link>
-              </p>
             </div>
           </form>
+          <p className="text-sm font-light text-gray-500">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-medium text-primary-600 hover:underline"
+            >
+              Login here
+            </Link>
+          </p>
         </div>
       </div>
       <ToastContainer />

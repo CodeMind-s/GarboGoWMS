@@ -20,7 +20,6 @@ const UserProfile = () => {
       try {
         const userProfile = await AuthService.getCurrentUserDetails();
         setProfile(userProfile);
-        console.log("get user details", profile);
       } catch (err) {
         setError(err.message);
       }
@@ -48,12 +47,9 @@ const UserProfile = () => {
   return (
     <UserDrawer>
       <div className="flex items-center justify-center ">
-        <div className="  w-[100%] h-screen p-5 flex items-start justify-center">
+        <div className="  w-[100%] h-full p-5 flex items-start justify-center">
           <div className=" w-[50%]">
-            <div
-              className="h-auto rounded border-[3px] p-5 m-4 border-[#48752c]"
-              // style={{ borderColor: "#48752c" }}
-            >
+            <div className="h-auto rounded border-[3px] p-5 m-4 border-[#48752c]">
               <div className="flex justify-between items-center">
                 <h1 className=" font-bold text-[21px] my-1">
                   Update Personal Information
@@ -70,90 +66,79 @@ const UserProfile = () => {
               {isToggleDropdownforInformation && (
                 <div>
                   <div className="flex flex-col justify-around space-y-2">
-                    {/* <div className="flex flex-col w-[40%]"> */}
-                      <h1 className="font-bold">Name: </h1>
-                      <input
-                        type="text"
-                        name="name"
-                        value={profile.username}
-                        onChange={handleInputChange}
-                        placeholder={
-                          profile.username
-                            ? profile.username
-                            : "Enter your name"
-                        }
-                        className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
-                      />
-                    {/* </div> */}
-                    {/* <div className="flex flex-col w-[40%]"> */}
-                      <h1 className="font-bold">Email: </h1>
-                      <input
-                        type="email"
-                        name="email"
-                        value={profile.email}
-                        onChange={handleInputChange}
-                        placeholder={
-                          profile.email ? profile.email : "Enter your email"
-                        }
-                        className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
-                      />
-                    {/* </div> */}
+                    <h1 className="font-bold">Name: </h1>
+                    <input
+                      type="text"
+                      name="name"
+                      value={profile.username}
+                      onChange={handleInputChange}
+                      placeholder={
+                        profile.username ? profile.username : "Enter your name"
+                      }
+                      className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                    <h1 className="font-bold">Email: </h1>
+                    <input
+                      type="email"
+                      name="email"
+                      value={profile.email}
+                      onChange={handleInputChange}
+                      placeholder={
+                        profile.email ? profile.email : "Enter your email"
+                      }
+                      className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
                   </div>
                   <div className="flex flex-col justify-around space-y-2">
-                    {/* <div className="flex flex-col w-[40%]"> */}
-                      <h1 className="font-bold">Gender: </h1>
-                      <div className="flex items-center space-x-4 space-y-2">
-                        <label className="flex items-center">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Male"
-                            checked={profile.gender === "Male"}
-                            onChange={handleInputChange}
-                            className="mr-2"
-                          />
-                          Male
-                        </label>
-                        <label className="flex items-center">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Female"
-                            checked={profile.gender === "Female"}
-                            onChange={handleInputChange}
-                            className="mr-2"
-                          />
-                          Female
-                        </label>
-                        <label className="flex items-center">
-                          <input
-                            type="radio"
-                            name="gender"
-                            value="Other"
-                            checked={profile.gender === "Other"}
-                            onChange={handleInputChange}
-                            className="mr-2"
-                          />
-                          Other
-                        </label>
-                      </div>
-                    {/* </div> */}
-
-                    {/* <div className="flex flex-col w-[40%]"> */}
-                      <h1 className="font-bold">Contact Number: </h1>
-                      <input
-                        type="text"
-                        name="contact"
-                        value={profile.contact}
-                        onChange={handleInputChange}
-                        placeholder={
-                          profile.contact
-                            ? profile.contact
-                            : "Enter your contact number"
-                        }
-                        className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
-                      />
-                    {/* </div> */}
+                    <h1 className="font-bold">Gender: </h1>
+                    <div className="flex items-center space-x-4 space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Male"
+                          checked={profile.gender === "Male"}
+                          onChange={handleInputChange}
+                          className="mr-2"
+                        />
+                        Male
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Female"
+                          checked={profile.gender === "Female"}
+                          onChange={handleInputChange}
+                          className="mr-2"
+                        />
+                        Female
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Other"
+                          checked={profile.gender === "Other"}
+                          onChange={handleInputChange}
+                          className="mr-2"
+                        />
+                        Other
+                      </label>
+                    </div>
+                    <h1 className="font-bold">Contact Number: </h1>
+                    <input
+                      type="text"
+                      name="contact"
+                      value={profile.contact}
+                      onChange={handleInputChange}
+                      placeholder={
+                        profile.contact
+                          ? profile.contact
+                          : "Enter your contact number"
+                      }
+                      className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
                   </div>
                   <div className="items-center flex flex-col justify-center">
                     <div className="w-full my-2">
@@ -240,9 +225,14 @@ const UserProfile = () => {
           </div>
           <div className="my-4  w-[50%] rounded border-[3px] border-[#48752c] p-5 ">
             <div className="flex justify-between w-full ">
-              <div className="w-[30%] my-5 justify-center flex">
-                <img src={user} alt="Logo" className=" w-[100px] h-[100px] " />
+              <div className="w-[30%] my-5 justify-center flex ">
+                <img
+                   src={profile?.profileImage || user}
+                  alt="Profile Picture"
+                  className="w-[120px] h-[120px] rounded-full"
+                />
               </div>
+
               <div className="w-[70%] justify-center flex">
                 <div className=" flex flex-col">
                   <div className="">

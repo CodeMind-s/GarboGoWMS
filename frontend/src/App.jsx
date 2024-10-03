@@ -12,6 +12,7 @@ import Profile from "./pages/user/profile/Profile";
 import UserGarbageRequest from "./pages/user/profile/UserGarbageRequest";
 import AdminInquiryUpdate from "./pages/admin/inquiries/AdminInquiryUpdate";
 import UserInquiryRequest from "./pages/user/profile/UserInquiryRequest";
+import UserDashbord from "./pages/user/profile/UserDashbord";
 
 function App() {
   return (
@@ -22,10 +23,10 @@ function App() {
           <Route exact path="/" Component={Home} />
           <Route exact path="/login" Component={Login} />
           <Route exact path="/register" Component={Register} />
-          <Route exact path="/user/dashboard" Component={Profile} />
+          <Route exact path="/user/dashboard" Component={UserDashbord} />
           <Route exact path="/user/my-garbage" Component={UserGarbageRequest} />
           <Route exact path="/user/my-inquiry" Component={UserInquiryRequest} />
-          <Route exact path="/profile" Component={Profile} />
+          <Route exact path="/user/profile" Component={Profile} />
 
           {/* Admin Route */}
           <Route exact path="/admin" Component={Dashboard} />

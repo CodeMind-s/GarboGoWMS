@@ -158,8 +158,8 @@ function formatPhoneNumber(phoneNumber) {
 // Function to send a message using the notify.lk API
 async function sendMessage(to, message) {
   const apiUrl = "https://app.notify.lk/api/v1/send";
-  const userId = "27132"; // Replace with your user ID
-  const apiKey = "JWVZfc6LN8YWvfCIDyyR"; // Replace with your API key
+  const userId = "28055"; // Replace with your user ID
+  const apiKey = "O3nZtNxq9SRz0w8Xhrpk"; // Replace with your API key
   const senderId = "NotifyDEMO"; // Replace with your sender ID
 
   const data = {

@@ -67,38 +67,102 @@ const AdminUsers = () => {
     fetchAllUsers();
   }, []);
 
+  const calculateTotalUsers = () => {
+    return users.length;
+  };
+
+  const calculateHighestEcoScore = () => {
+    if (users.length === 0) return null;
+    const highestEcoUser = users.reduce((prev, current) =>
+      prev.ecoscore > current.ecoscore ? prev : current
+    );
+    return highestEcoUser;
+  };
+
+  const calculateMaleFemaleRatio = () => {
+    if (users.length === 0) return { male: 0, female: 0 };
+
+    const maleCount = users.filter((user) => user.gender === "Male").length;
+    const femaleCount = users.filter((user) => user.gender === "Female").length;
+
+    const total = maleCount + femaleCount;
+    const malePercentage = ((maleCount / total) * 100).toFixed(0);
+    const femalePercentage = ((femaleCount / total) * 100).toFixed(0);
+
+    return {
+      male: malePercentage,
+      female: femalePercentage,
+    };
+  };
+
   return (
     <ResponsiveDrawer>
+      <div className="flex justify-between mb-4 text-center">
+        <div className="bg-white rounded w-[24%] p-4 flex flex-col justify-center">
+          <h1 className="">Total Accounts Registered: </h1>
+          <h1 className="text-[28px] font-semibold text-[#48752c]">
+            {" "}
+            {calculateTotalUsers()}{" "}
+          </h1>
+        </div>
+        <div className="bg-white rounded w-[24%] p-4 flex flex-col justify-center">
+          <h1 className="">Highest EcoScore Membership By: </h1>
+          <h1 className="text-[21px] font-semibold text-[#48752c]">
+            {" "}
+            {calculateHighestEcoScore()?.username || "N/A"}
+          </h1>
+        </div>
+        <div className="bg-white rounded w-[24%] p-4 text-center">
+          <h1>Male Female Ratio</h1>
+          <div className="flex justify-between m-1 ">
+            <div className=" bg-[#48752c] w-[45%] p-2 text-white rounded-xl">
+              <h1 className="text-[18px]">Male</h1>
+              <h1 className="text-[21px]">
+                {calculateMaleFemaleRatio().male}%
+              </h1>
+            </div>
+            <div className=" bg-[#f9da78] w-[45%] p-2  text-black rounded-xl">
+              <h1 className="text-[18px]">Female</h1>
+              <h1 className="text-[21px]">
+                {calculateMaleFemaleRatio().female}%
+              </h1>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#48752c] hover:bg-[#f9da78]  text-white hover:text-black rounded w-[24%] p-4 flex flex-col justify-center">
+          <h1> Click to Download User Management Report</h1>
+        </div>
+      </div>
       <table className="w-full text-sm text-left rtl:text-right text-gray-500 :text-gray-400">
         <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-[#48752c] bg-white :text-white :bg-gray-800">
           User Account Holders
         </caption>
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50 :bg-gray-700 :text-gray-400">
+        <thead className=" text-center text-xs text-gray-700 uppercase bg-gray-50 :bg-gray-700 :text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-4 py-3 ">
               Username
             </th>
             {/* <th scope="col" className="px-6 py-3">
                 Email
               </th> */}
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-4 py-3">
               Email
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-4 py-3">
               Gender
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-4 py-3">
               ecoscore
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-4 py-3">
               Address
             </th>
-            <th scope="col" className="px-6 py-3">
+            <th scope="col" className="px-4 py-3">
               contact
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-center">
           {users.length > 0 ? (
             users.map((user) => (
               <tr
@@ -107,24 +171,42 @@ const AdminUsers = () => {
               >
                 <th
                   scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
+                  className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
                 >
                   {user.username}
                 </th>
-                <td className="px-6 py-4">{user.email}</td>
-                <td className="px-6 py-4">{user.gender}</td>
-                <td className="px-6 py-4">{user.ecoscore}</td>
-                <td className="px-6 py-4">{user.address}</td>
-                <td className="px-6 py-4">{user.contact}</td>
-                <td className="px- py-4 text-right">
-                  <a className="font-medium text-gray-400 :text-blue-500 cursor-pointer">
+                <td className="px-4 py-4">{user.email}</td>
+                <td className="px-4 py-4">{user.gender}</td>
+                <td className="px-4 py-4">{user.ecoscore}</td>
+                <td className="px-4 py-4">{user.address}</td>
+                <td className="px-4 py-4">{user.contact}</td>
+                <td className="px-4 py-4 text-right">
+                  <a
+                    className={`font-medium ${
+                      user.email === "admin@gmail.com"
+                        ? "text-gray-300"
+                        : "text-gray-400 :text-blue-500 cursor-pointer"
+                    }`}
+                    style={{
+                      pointerEvents:
+                        user.email === "admin@gmail.com" ? "none" : "auto",
+                    }}
+                  >
                     <EditIcon />
                   </a>
                 </td>
                 <td className="px-3 py-4 text-right">
                   <a
                     onClick={() => handleClickOpen(user._id)}
-                    className="font-medium text-red-600 :text-blue-500 cursor-pointer"
+                    className={`font-medium ${
+                      user.email === "admin@gmail.com"
+                        ? "text-gray-300"
+                        : "text-red-600 :text-blue-500 cursor-pointer"
+                    }`}
+                    style={{
+                      pointerEvents:
+                        user.email === "admin@gmail.com" ? "none" : "auto",
+                    }}
                   >
                     <DeleteIcon />
                   </a>

@@ -16,10 +16,10 @@ import generateToken from "../utils/createToken.js";
  * @throws  {500} If a server error occurs
  */
 const createUser = asyncHandler(async (req, res) => {
-  const { username, email, password, address, gender, ecoscore, contact } = req.body;
+  const { username, email, password, address, gender, ecoscore, contact, profileImage } = req.body;
 
   // Check the body has necessary attributes
-  if (!username || !email || !password || !address || !gender || !ecoscore || !contact) {
+  if (!username || !email || !password || !address || !gender || !ecoscore || !contact || !profileImage) {
     throw new Error("Please fill all the inputs!!!");
   }
 
@@ -43,6 +43,7 @@ const createUser = asyncHandler(async (req, res) => {
     gender,
     ecoscore, 
     contact,
+    profileImage,
   });
 
   try {
@@ -57,6 +58,7 @@ const createUser = asyncHandler(async (req, res) => {
       gender: newUser.gender,
       ecoscore: newUser.ecoscore,
       contact: newUser.contact,
+      profileImage: newUser.profileImage,
       isAdmin: newUser.isAdmin,
     });
   } catch (error) {
@@ -160,6 +162,7 @@ const getCurrentUserProfile = asyncHandler(async (req, res) => {
       gender: user.gender,
       ecoscore: user.ecoscore,
       contact: user.contact,
+      profileImage: user.profileImage,
     });
   } else {
     res.status(404);

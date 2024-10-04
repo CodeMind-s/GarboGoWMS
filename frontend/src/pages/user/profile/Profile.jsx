@@ -421,17 +421,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 500 && (
-                  <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "upright",
-                    }}
-                  >
-                    COLLECT
-                  </div>
-                )}
+                {profile.ecoscore >= 500 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
               </div>
             </div>
 
@@ -458,17 +448,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 1000 && (
-                  <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "upright",
-                    }}
-                  >
-                    COLLECT
-                  </div>
-                )}
+                {profile.ecoscore >= 1000 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
               </div>
             </div>
           </div>
@@ -496,17 +476,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 1500 && (
-                  <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "upright",
-                    }}
-                  >
-                    COLLECT
-                  </div>
-                )}
+                {profile.ecoscore >= 1500 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
               </div>
             </div>
             <div className=" w-[48%] flex justify-start">
@@ -532,17 +502,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 2000 && (
-                  <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "upright",
-                    }}
-                  >
-                    COLLECT
-                  </div>
-                )}
+                {profile.ecoscore >= 2000 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
               </div>
             </div>
           </div>

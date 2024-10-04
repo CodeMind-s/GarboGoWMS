@@ -13,6 +13,9 @@ import { publicGarbageLocations } from "../../../utils/publicGarbageBin";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-color-markers";
+import { getAllSchedules } from "../../../api/scheduleApi";
+import { Kaduwela, Koswatta, Kothalawala, Malabe, NoTown, Rajagiriya } from "../../../utils/townCodes";
+
 
 export default function GarbageMap() {
   const [lat, setLat] = useState(6.911967);
@@ -25,6 +28,8 @@ export default function GarbageMap() {
   const [isClicked, setIsClicked] = useState("All");
   const [publicBinsOn, setPublicBinsOn] = useState(false);
   const [binSelection, setBinSelection] = useState("public");
+
+  const [trucks, setTrucks] = useState([]);
 
   const fetchUserAllGarbages = async () => {
     try {
@@ -47,9 +52,20 @@ export default function GarbageMap() {
     }
   };
 
+  const fetchAllTrucks = async () => {
+    try {
+      const res= await getAllSchedules();
+      setTrucks(res);
+    } catch (error) {
+      alert(error.message);
+      console.error("Error fetching trucks: ", error.message);
+    }
+  }; // Fetch all trucks
+
   useEffect(() => {
     // console.log(`garbages => `, garbages);
     fetchUserAllGarbages();
+    fetchAllTrucks();
   }, []);
 
   useEffect(() => {
@@ -108,18 +124,15 @@ export default function GarbageMap() {
     mymap.setView(newMid, mapSize);
 
     addMarkers(mymap);
+    addTrucks(mymap);
 
     if (publicBinsOn) {
       addPublicGarbageMarkers(mymap);
     }
-  }, [
-    lat,
-    lon,
-    filteredGarbages,
-    filteredPublicGarbages,
-    publicBinsOn,
-    binSelection,
-  ]);
+    
+    // Call the function to draw the polygon for Pitabaddara
+    // drawPolygonForTown(pitabaddara, mymap)
+  }, [lat, lon, filteredGarbages, filteredPublicGarbages, publicBinsOn, binSelection]);
 
   const addMarkers = (mymap) => {
     if (binSelection === "my") {
@@ -169,6 +182,44 @@ export default function GarbageMap() {
     }
   };
 
+  const addTrucks = (mymap) => {
+    trucks.forEach((schedule) => {
+      const mark = [schedule.latitude, schedule.longitude];
+      const truckMarker = L.marker(mark, { icon: truck }).addTo(mymap).bindPopup(schedule.area);
+
+      truckMarker.on('click', function() {
+        drawPolygonForTown(schedule.area, mymap);
+      });
+    })
+  }
+
+  // Function to draw a polygon with predefined coordinates
+    const drawPolygonForTown = (coordinates, mymap) => {
+      let town ;
+      if(coordinates == "Koswatte"){
+        town = Koswatta;
+      }
+      else if(coordinates == "Kothalawala"){
+        town = Kothalawala;
+      }
+      else if(coordinates == "Kaduwela"){
+        town = Kaduwela;
+      }
+      else if(coordinates == "Rajagiriya"){
+        town = Rajagiriya;
+      }
+      else if(coordinates == "Malabe"){
+        town = Malabe;
+      }
+      else{
+        town = NoTown;
+      }
+      const polygon = L.polygon(town, { color: 'blue', fillOpacity: 0.3,  weight: 3, opacity: 0.7, }).addTo(mymap);
+      mymap.fitBounds(polygon.getBounds()); // Fit the map to the polygon bounds
+    };
+
+
+
   const filter = (type) => {
     setPublicBinsOn(false);
     if (type === "All") {
@@ -191,73 +242,70 @@ export default function GarbageMap() {
   return (
     <div className="relative">
       <div className="bg-white bg-opacity-90 z-[1000] rounded-xl top-0 right-0 flex relative">
-        <div
+          <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
-            isClicked === "All" ? "bg-[#48752c]" : ""
+              isClicked === "All" ? "bg-[#48752c]" : ""
           }`}
           onClick={() => filter("All")}
-        >
+          >
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-gradient-to-tr from-[#2196f3] via-[#ff9800] to-[#f44336] mr-2 "></div>
           <span className=" cursor-pointer mr-8">All</span>
-        </div>
-        <div
+          </div>
+          <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
-            isClicked === "Organic" ? "bg-[#48752c]" : ""
+              isClicked === "Organic" ? "bg-[#48752c]" : ""
           }`}
           onClick={() => filter("Organic")}
-        >
+          >
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-[#4caf50] mr-2"></div>
           <span className=" cursor-pointer mr-8">Organic</span>
-        </div>
-        <div
+          </div>
+          <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
-            isClicked === "Recyclable" ? "bg-[#48752c]" : ""
+              isClicked === "Recyclable" ? "bg-[#48752c]" : ""
           }`}
           onClick={() => filter("Recyclable")}
-        >
+          >
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-[#2196f3] mr-2"></div>
           <span className=" cursor-pointer mr-8">Recyclable</span>
-        </div>
-        <div
+          </div>
+          <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
-            isClicked === "Non-Recyclable" ? "bg-[#48752c]" : ""
+              isClicked === "Non-Recyclable" ? "bg-[#48752c]" : ""
           }`}
           onClick={() => filter("Non-Recyclable")}
-        >
+          >
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-[#ff9800] mr-2"></div>
           <span className=" cursor-pointer mr-8">Non-Recyclable</span>
-        </div>
-        <div
+          </div>
+          <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
-            isClicked === "E-Waste" ? "bg-[#48752c]" : ""
+              isClicked === "E-Waste" ? "bg-[#48752c]" : ""
           }`}
           onClick={() => filter("E-Waste")}
-        >
+          >
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-[#9c27b0] mr-2"></div>
           <span className=" cursor-pointer mr-8">E-Waste</span>
-        </div>
-        <div
+          </div>
+          <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
-            isClicked === "Hazardous" ? "bg-[#48752c]" : ""
+              isClicked === "Hazardous" ? "bg-[#48752c]" : ""
           }`}
           onClick={() => filter("Hazardous")}
-        >
+          >
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-[#f44336] mr-2"></div>
           <span className=" cursor-pointer mr-8">Hazardous</span>
-        </div>
-        <select
-          onChange={(e) => setBinSelection(e.target.value)}
-          className=" text-[#48752C] font-semibold border-2 border-[#48752c] rounded-lg px-4 absolute top-0 right-0 h-full"
-        >
-          <option value="public">Public Garbage Bins</option>
-          <option value="my">My Garbage Requests</option>
-        </select>
+          </div>
+          <select onChange={(e) => setBinSelection(e.target.value)} className=" text-[#48752C] font-semibold border-2 border-[#48752c] rounded-lg px-4 absolute top-0 right-0 h-full">
+            <option value='public'>Public Garbage Bins</option>
+            <option value='my'>My Garbage Requests</option>
+          </select>
       </div>
 
       <div
-        id="map"
-        className=" rounded-xl border-gray-200 h-[340px]"
-        style={{ width: "100%" }}
+          id="map"
+          className=" rounded-xl border-gray-200 h-[580px]"
+          style={{ width: "100%" }}
       ></div>
     </div>
   );

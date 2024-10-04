@@ -15,6 +15,8 @@ import UserInquiryRequest from "./pages/user/profile/UserInquiryRequest";
 import UserNeighborhoodMap from "./pages/user/neighborhoodMap/NeighborhoodMap";
 import UserDashbord from "./pages/user/profile/UserDashbord";
 import AdminSchedules from "./pages/admin/schedules/AdminSchedules";
+import TruckAuth from "./pages/user/truck/TruckAuth";
+import TrackSchedules from "./pages/user/truck/TrackSchedules";
 
 function App() {
   return (
@@ -26,20 +28,36 @@ function App() {
           <Route exact path="/login" Component={Login} />
           <Route exact path="/register" Component={Register} />
           <Route exact path="/user/dashboard" Component={UserDashbord} />
-          <Route exact path="/user/garbage-map" Component={UserNeighborhoodMap} />
+          <Route
+            exact
+            path="/user/garbage-map"
+            Component={UserNeighborhoodMap}
+          />
           <Route exact path="/user/my-garbage" Component={UserGarbageRequest} />
           <Route exact path="/user/my-inquiry" Component={UserInquiryRequest} />
           <Route exact path="/user/profile" Component={Profile} />
 
+          {/* Truck Route */}
+          <Route exact path="/truck/" Component={TruckAuth} />
+          <Route exact path="/truck/schedules" Component={TrackSchedules} />
+
           {/* Admin Route */}
           <Route exact path="/admin" Component={Dashboard} />
           <Route exact path="/admin/garbage" Component={AdminGarbage} />
-          <Route exact path="/admin/garbage/update" Component={AdminGarbageUpdate}/>
+          <Route
+            exact
+            path="/admin/garbage/update"
+            Component={AdminGarbageUpdate}
+          />
           <Route exact path="/admin/users" Component={AdminUsers} />
           <Route exact path="/admin/trucks" Component={AdminTrucks} />
           <Route exact path="/admin/schedule" Component={AdminSchedules} />
           <Route exact path="/admin/inquiries" Component={AdminInquiries} />
-          <Route exact path="/admin/inquiries/update" Component={AdminInquiryUpdate}/>
+          <Route
+            exact
+            path="/admin/inquiries/update"
+            Component={AdminInquiryUpdate}
+          />
         </Routes>
       </Router>
     </>

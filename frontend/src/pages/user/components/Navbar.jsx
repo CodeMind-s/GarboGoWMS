@@ -36,47 +36,13 @@ const Navbar = () => {
         <div className="hidden w-full md:block md:w-auto" id="navbar-default">
           <ul className=" items-center font-medium flex flex-col p-4 md:p-0 mt-4 border md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0  :bg-gray-800 md::bg-gray-900 :border-gray-700">
             <li>
-              <a
-                href="/"
-                className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:hover:text-[#f9da78]   md:p-0 :text-white md::text-blue-500"
-                aria-current="page"
-              >
-                Home
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#f9da78] md:p-0 :text-white md::hover:text-blue-500 :hover:bg-gray-700 :hover:text-white md::hover:bg-transparent"
-              >
-                About
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#f9da78] md:p-0 :text-white md::hover:text-blue-500 :hover:bg-gray-700 :hover:text-white md::hover:bg-transparent"
-              >
-                Services
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#f9da78] md:p-0 :text-white md::hover:text-blue-500 :hover:bg-gray-700 :hover:text-white md::hover:bg-transparent"
-              >
-                Contact
-              </a>
-            </li>
-            <li>
-            <div className=" bg-[#48752c] p-2 rounded">
-              <a
-                href="././login"
-                className="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#f9da78] md:p-0 :text-white md::hover:text-blue-500 :hover:bg-gray-700 :hover:text-white md::hover:bg-transparent"
-              >
-                SignIn / SignUp
-              </a>
+              <div className=" bg-[#48752c] py-2 px-5 rounded">
+                <a
+                  href="././login"
+                  className="block text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#f9da78] md:p-0 :text-white md::hover:text-blue-500 :hover:bg-gray-700 :hover:text-white md::hover:bg-transparent"
+                >
+                  Get Started
+                </a>
               </div>
             </li>
           </ul>

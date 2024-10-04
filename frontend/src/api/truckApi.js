@@ -44,5 +44,20 @@ const deleteTruck = async (id) => {
   }
 }; // Delete a truck
 
-export { createTruck, getAllTrucks, updateTruck, deleteTruck };
+const getTruckDetails = async ({ truckNumber, driverName }) => {
+  try {
+    // Send truckNumber and driverName as part of the request body
+    const truckDetails = await new API().post(`truck/`, {
+      truckNumber,
+      driverName,
+    });
+    return truckDetails;
+  } catch (error) {
+    console.error("Error fetching truck details:", error.message);
+    throw error; // Rethrow the error for the component to handle
+  }
+}; // Get truck details by truck number and driver name
+
+export { createTruck, getAllTrucks, updateTruck, deleteTruck, getTruckDetails };
+
 // Export the functions for use in the frontend

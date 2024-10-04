@@ -68,7 +68,7 @@ const UserGarbageRequest = () => {
           currentGarbage.filter((garbage) => garbage._id !== selectedGarbageId)
         );
         handleClose();
-        toast.success("Garbage request has been deleted successfully!", {
+        toast.success("Garbage request deleted successfully!", {
           position: "bottom-right",
           autoClose: 2000,
           hideProgressBar: false,

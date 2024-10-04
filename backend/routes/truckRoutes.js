@@ -4,6 +4,7 @@ import {
   getAllTrucks,
   updateTruck,
   deleteTruck,
+  getTruckByDriverAndNumber,
 } from "../controllers/truckController.js";
 import { authenticate, authorizeAdmin } from "../middlewares/authMiddleware.js";
 
@@ -12,6 +13,7 @@ const router = express.Router();
 // Route to create a new truck
 router
   .route("/")
+  .post(getTruckByDriverAndNumber)
   .post(authenticate, authorizeAdmin, createTruck)
   .get(authenticate, authorizeAdmin, getAllTrucks);
 

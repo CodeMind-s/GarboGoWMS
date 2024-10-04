@@ -16,7 +16,7 @@ function Register() {
     email: "",
     password: "",
     gender: "",
-    ecoscore: "150", // Default ecoscore
+    ecoscore: "", 
     address: "",
     contact: "",
     confirmPassword: "",
@@ -60,7 +60,7 @@ function Register() {
       email,
       password,
       gender,
-      ecoscore: "150",
+      ecoscore: "500",
       address,
       contact,
       profileImage: uploadedImageUrl,

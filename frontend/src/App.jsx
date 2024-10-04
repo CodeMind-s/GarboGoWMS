@@ -15,6 +15,7 @@ import UserInquiryRequest from "./pages/user/profile/UserInquiryRequest";
 import UserNeighborhoodMap from "./pages/user/neighborhoodMap/NeighborhoodMap";
 import UserDashbord from "./pages/user/profile/UserDashbord";
 import AdminSchedules from "./pages/admin/schedules/AdminSchedules";
+import DriverDashboard from "./pages/driver/pages/driverDashboard";
 
 function App() {
   return (
@@ -30,6 +31,9 @@ function App() {
           <Route exact path="/user/my-garbage" Component={UserGarbageRequest} />
           <Route exact path="/user/my-inquiry" Component={UserInquiryRequest} />
           <Route exact path="/user/profile" Component={Profile} />
+
+           {/* Driver Route */}
+          <Route exact path="/driver" Component={DriverDashboard} />
 
           {/* Admin Route */}
           <Route exact path="/admin" Component={Dashboard} />

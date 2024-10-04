@@ -79,6 +79,22 @@ class AuthService {
     }
   }
 
+  async updateUser(profileData) {
+    try {
+      const response = await this.api.put(
+        "users/profile", 
+        profileData,    
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating user profile:", error);
+      throw error;
+    }
+  }
+
   async logoutCurrentUser() {
     try {
       const response = await this.api.post("users/logout");

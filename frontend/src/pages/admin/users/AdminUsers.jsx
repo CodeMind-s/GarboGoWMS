@@ -5,7 +5,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ToastContainer, toast } from "react-toastify";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
+import logo from "../../../assets/GarboGo.png";
+import userimage from "../../../assets/user.png";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,6 +21,7 @@ const AdminUsers = () => {
   const [users, setUsers] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
+  const [loader, setLoader] = useState(false);
 
   const handleClickOpen = (id) => {
     console.log(`id => `, id);
@@ -72,10 +77,21 @@ const AdminUsers = () => {
   };
 
   const calculateHighestEcoScore = () => {
-    if (users.length === 0) return null;
-    const highestEcoUser = users.reduce((prev, current) =>
-      prev.ecoscore > current.ecoscore ? prev : current
-    );
+    if (!users || users.length === 0) {
+      console.log("No users available");
+      return null;
+    }
+
+    const highestEcoUser = users.reduce((prev, current) => {
+      const prevEcoScore =
+        typeof prev.ecoscore === "number" ? prev.ecoscore : 0;
+      const currentEcoScore =
+        typeof current.ecoscore === "number" ? current.ecoscore : 0;
+
+      return prevEcoScore > currentEcoScore ? prev : current;
+    });
+
+    console.log("User with the highest eco score:", highestEcoUser);
     return highestEcoUser;
   };
 
@@ -95,24 +111,75 @@ const AdminUsers = () => {
     };
   };
 
+  const downloadPDF = (userData) => {
+    const doc = new jsPDF();
+    const imgLogo = new Image();
+    imgLogo.src = "../src/assets/GarboGo.png";
+
+    console.log("Image path: ", imgLogo.src);
+    imgLogo.onload = () => {
+      //Header
+      doc.addImage(imgLogo, "PNG", 14, 10, 55, 15);
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor("48752c");
+      doc.setFontSize(16);
+      doc.text("GarboGo Waste Management System", 95, 18);
+
+      // Title
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor("000000");
+      doc.setFontSize(18);
+      doc.text("User Management Report", 14, 40);
+
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+
+      // Date and Time of Report Generation
+      doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 48);
+
+      // Table for Garbage Collection Summary
+      autoTable(doc, {
+        startY: 58,
+        head: [["Summary", "Count"]],
+        body: [["Total Accounts Registered", userData.totalUsers]],
+        theme: "grid",
+      });
+
+      // Save the PDF
+      const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
+      doc.save(`User_Management_Report_${generatedDate}.pdf`);
+      toast.success("Report Generated Successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
+  };
+
   return (
     <ResponsiveDrawer>
       <div className="flex justify-between mb-4 text-center">
-        <div className="bg-white rounded w-[24%] p-4 flex flex-col justify-center">
+        <div className="bg-white rounded w-[24%] p-4 flex flex-col justify-center shadow-xl">
           <h1 className="">Total Accounts Registered: </h1>
           <h1 className="text-[28px] font-semibold text-[#48752c]">
             {" "}
             {calculateTotalUsers()}{" "}
           </h1>
         </div>
-        <div className="bg-white rounded w-[24%] p-4 flex flex-col justify-center">
+        <div className="bg-white rounded w-[24%] p-4 flex flex-col justify-center shadow-xl">
           <h1 className="">Highest EcoScore Membership By: </h1>
           <h1 className="text-[21px] font-semibold text-[#48752c]">
             {" "}
             {calculateHighestEcoScore()?.username || "N/A"}
           </h1>
         </div>
-        <div className="bg-white rounded w-[24%] p-4 text-center">
+        <div className="bg-white rounded w-[24%] p-4 text-center shadow-xl">
           <h1>Male Female Ratio</h1>
           <div className="flex justify-between m-1 ">
             <div className=" bg-[#48752c] w-[45%] p-2 text-white rounded-xl">
@@ -129,16 +196,24 @@ const AdminUsers = () => {
             </div>
           </div>
         </div>
-        <div className="bg-[#48752c] hover:bg-[#f9da78]  text-white hover:text-black rounded w-[24%] p-4 flex flex-col justify-center">
+        <div
+          className="bg-[#48752c] cursor-pointer shadow-xl text-white hover:text-[#f9da78] rounded w-[24%] p-4 flex flex-col justify-center"
+          onClick={() =>
+            downloadPDF({
+              totalUsers: calculateTotalUsers(),
+            })
+          }
+        >
           <h1> Click to Download User Management Report</h1>
         </div>
       </div>
-      <table className="w-full text-sm text-left rtl:text-right text-gray-500 :text-gray-400">
-        <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-[#48752c] bg-white :text-white :bg-gray-800">
+      <table className="w-full shadow-xl text-sm text-left rtl:text-right text-gray-500 :text-gray-400">
+        <caption className="p-5 shadow-xl  text-lg font-semibold text-left rtl:text-right text-[#48752c]  bg-gray-50 :text-white :bg-gray-800">
           User Account Holders
         </caption>
         <thead className=" text-center text-xs text-gray-700 uppercase bg-gray-50 :bg-gray-700 :text-gray-400">
           <tr>
+            <th scope="col" className="px-4 py-3 "></th>
             <th scope="col" className="px-4 py-3 ">
               Username
             </th>
@@ -160,15 +235,23 @@ const AdminUsers = () => {
             <th scope="col" className="px-4 py-3">
               contact
             </th>
+            <th scope="col" className="px-4 py-3"></th>
           </tr>
         </thead>
-        <tbody className="text-center">
+        <tbody className="text-center shadow-xl ">
           {users.length > 0 ? (
             users.map((user) => (
               <tr
-                className="bg-white border-b :bg-gray-800 :border-gray-700"
+                className="bg-white border-b :bg-gray-800 :border-gray-700 "
                 key={user._id}
               >
+                <td className="w-full  px-3">
+                  <img
+                    src={user?.profileImage || userimage}
+                    alt="Profile Picture"
+                    className="w-[30px] h-[30px] rounded-full"
+                  />
+                </td>
                 <th
                   scope="row"
                   className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
@@ -180,7 +263,7 @@ const AdminUsers = () => {
                 <td className="px-4 py-4">{user.ecoscore}</td>
                 <td className="px-4 py-4">{user.address}</td>
                 <td className="px-4 py-4">{user.contact}</td>
-                <td className="px-4 py-4 text-right">
+                {/* <td className="px-4 py-4 text-right">
                   <a
                     className={`font-medium ${
                       user.email === "admin@gmail.com"
@@ -194,7 +277,7 @@ const AdminUsers = () => {
                   >
                     <EditIcon />
                   </a>
-                </td>
+                </td> */}
                 <td className="px-3 py-4 text-right">
                   <a
                     onClick={() => handleClickOpen(user._id)}

@@ -6,6 +6,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { deleteInquiry, getAllInquiries } from "../../../api/inquiryApi";
 
 // MUI
 import Button from "@mui/material/Button";

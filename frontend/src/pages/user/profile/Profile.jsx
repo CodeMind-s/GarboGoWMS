@@ -32,6 +32,15 @@ const UserProfile = () => {
     profileImage: "",
   });
 
+  const fetchProfile = async () => {
+    try {
+      const userProfile = await AuthService.getCurrentUserDetails();
+      setProfile(userProfile);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -134,6 +143,178 @@ const UserProfile = () => {
             <div className="flex justify-center w-full">
               <div className=" my-5 justify-center flex mx-5 ">
                 <img
+                  src={dropdown}
+                  alt="dropdown"
+                  className={`w-[20px] h-[20px] cursor-pointer transition-transform duration-300 ${
+                    isToggleDropdownforInformation ? "rotate-180" : "rotate-0"
+                  }`}
+                  onClick={toggleDropdownforInformation}
+                />
+              </div>
+              {isToggleDropdownforInformation && (
+                <div>
+                  <div className="flex flex-col justify-around space-y-2">
+                    <h1 className="font-bold">Name: </h1>
+                    <input
+                      type="text"
+                      name="name"
+                      value={profile.username}
+                      onChange={handleInputChange}
+                      placeholder={
+                        profile.username ? profile.username : "Enter your name"
+                      }
+                      className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                    <h1 className="font-bold">Email: </h1>
+                    <input
+                      type="email"
+                      name="email"
+                      value={profile.email}
+                      onChange={handleInputChange}
+                      placeholder={
+                        profile.email ? profile.email : "Enter your email"
+                      }
+                      className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                  </div>
+                  <div className="flex flex-col justify-around space-y-2">
+                    <h1 className="font-bold">Gender: </h1>
+                    <div className="flex items-center space-x-4 space-y-2">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Male"
+                          checked={profile.gender === "Male"}
+                          onChange={handleInputChange}
+                          className="mr-2"
+                        />
+                        Male
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Female"
+                          checked={profile.gender === "Female"}
+                          onChange={handleInputChange}
+                          className="mr-2"
+                        />
+                        Female
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Other"
+                          checked={profile.gender === "Other"}
+                          onChange={handleInputChange}
+                          className="mr-2"
+                        />
+                        Other
+                      </label>
+                    </div>
+                    <h1 className="font-bold">Contact Number: </h1>
+                    <input
+                      type="text"
+                      name="contact"
+                      value={profile.contact}
+                      onChange={handleInputChange}
+                      placeholder={
+                        profile.contact
+                          ? profile.contact
+                          : "Enter your contact number"
+                      }
+                      className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                  </div>
+                  <div className="items-center flex flex-col justify-center">
+                    <div className="w-full my-2">
+                      <h1 className="font-bold">Current Address: </h1>
+                      <input
+                        type="text"
+                        name="address"
+                        value={profile.address}
+                        onChange={handleInputChange}
+                        placeholder={
+                          profile.address
+                            ? profile.address
+                            : "Enter your address"
+                        }
+                        className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-5 bg-[#f9da78] text-[16px] rounded-full inline-block">
+                    <button className="px-5 py-2 text-center text-black">
+                      Update Information
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="h-auto rounded border-[3px] p-5 m-4 border-[#48752c]">
+              <div className="flex justify-between items-center">
+                <h1 className="font-bold text-[21px]">Change Password</h1>
+                <img
+                  src={dropdown}
+                  alt="dropdown"
+                  className={`w-[20px] h-[20px] cursor-pointer transition-transform duration-300 ${
+                    isDropdownOpen ? "rotate-180" : "rotate-0"
+                  }`}
+                  onClick={toggleDropdown}
+                />
+              </div>
+
+              {isDropdownOpen && (
+                <div className="items-center flex flex-col justify-center">
+                  <div className="w-[90%] my-2">
+                    <h1 className="font-bold">Current Password:</h1>
+                    <input
+                      type="password"
+                      name="currentPassword"
+                      value={profile.currentPassword}
+                      onChange={handleInputChange}
+                      placeholder="Current Password"
+                      className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                  </div>
+                  <div className="w-[90%] my-2">
+                    <h1 className="font-bold">New Password:</h1>
+                    <input
+                      type="password"
+                      name="newPassword"
+                      value={profile.newPassword}
+                      onChange={handleInputChange}
+                      placeholder="New Password"
+                      className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                  </div>
+                  <div className="w-[90%] my-2">
+                    <h1 className="font-bold">Confirm Password:</h1>
+                    <input
+                      type="password"
+                      name="confirmPassword"
+                      value={profile.confirmPassword}
+                      onChange={handleInputChange}
+                      placeholder="Confirm New Password"
+                      className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                  </div>
+                  <div className="mt-5 bg-[#f9da78] text-[16px] rounded-full inline-block">
+                    <button className="px-5 py-2 text-center text-black">
+                      Update Password
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="my-4  w-[50%] rounded border-[3px] border-[#48752c] p-5 ">
+            <div className="flex justify-between w-full ">
+              <div className="w-[30%] my-5 justify-center flex ">
+                <img
                   src={profile?.profileImage || user}
                   alt="Profile Picture"
                   className="w-[120px] h-[120px] rounded-full"
@@ -173,9 +354,10 @@ const UserProfile = () => {
               </div>
             </div>
             <div className="relative flex flex-col items-end justify-end w-[30%]">
-              <div 
-              onClick={toggleDropdownforInformation}
-              className="absolute top-0 right-0 bg-gray-300 hover:bg-[#f9da78] w-[50px] shadow-xl h-[50px] flex items-center justify-center rounded-full mb-2">
+              <div
+                onClick={toggleDropdownforInformation}
+                className="absolute top-0 right-0 bg-gray-300 hover:bg-[#f9da78] w-[50px] shadow-xl h-[50px] flex items-center justify-center rounded-full mb-2"
+              >
                 <img
                   src={editprofile}
                   alt="edit"
@@ -381,7 +563,7 @@ const UserProfile = () => {
           </div> */}
         </div>
       </div>
-      <div className=" w-[95%] mx-auto ">
+      <div className=" w-[95%] mx-auto mb-10">
         <h1 className=" text-[#48752c] text-xl font-semibold">
           Redeem Vouchers
         </h1>

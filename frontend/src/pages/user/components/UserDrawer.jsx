@@ -21,7 +21,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import MapIcon from '@mui/icons-material/Map';
+import MapIcon from "@mui/icons-material/Map";
 
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -85,9 +85,7 @@ function UserDrawer({ children }) {
   const drawer = (
     <div>
       <Toolbar>
-        <Link to="/admin">
-          <img src={logo} alt="logo" style={{ width: 150 }} />
-        </Link>
+        <img src={logo} alt="logo" style={{ width: 150 }} />
       </Toolbar>
       <Divider />
       <List>

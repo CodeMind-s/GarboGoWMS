@@ -120,7 +120,7 @@ const AdminInquiries = () => {
 
     // Add title
     doc.setFontSize(20);
-    doc.text("Filteres Inquiries Report", 14, 22);
+    doc.text("Filtered Inquiries Report", 14, 22);
 
     // Add current date
     doc.setFontSize(11);

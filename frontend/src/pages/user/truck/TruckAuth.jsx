@@ -16,7 +16,7 @@ const TruckAuth = () => {
       console.log("Login successful", response);
       // Redirect to dashboard or home page
       if (response) {
-        navigate("/truck/schedules");
+        navigate("/driver");
       } else {
         navigate("/truck");
       }

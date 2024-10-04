@@ -188,7 +188,11 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
   if (user) {
     user.username = req.body.username || user.username;
     user.email = req.body.email || user.email;
-
+    user.gender = req.body.gender || user.gender;
+    user.address = req.body.address || user.address;
+    user.contact = req.body.contact || user.contact;
+    user.profileImage = req.body.profileImage || user.profileImage;
+    
     let passwordChanged = false;
 
     if (req.body.password) {
@@ -206,10 +210,11 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
       _id: updatedUser._id,
       username: updatedUser.username,
       email: updatedUser.email,
-      // address: updatedUser.address,
-      // gender: updatedUser.gender,
-      // ecoscore: updatedUser.ecoscore,
-      // contact: updatedUser.contact,
+      address: updatedUser.address,
+      gender: updatedUser.gender,
+      ecoscore: updatedUser.ecoscore,
+      contact: updatedUser.contact,
+      profileImage: updatedUser.profileImage,
       isAdmin: updatedUser.isAdmin,
       message: passwordChanged
         ? "Password successfully changed!"

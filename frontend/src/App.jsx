@@ -16,7 +16,7 @@ import UserNeighborhoodMap from "./pages/user/neighborhoodMap/NeighborhoodMap";
 import UserDashbord from "./pages/user/profile/UserDashbord";
 import AdminSchedules from "./pages/admin/schedules/AdminSchedules";
 import TruckAuth from "./pages/user/truck/TruckAuth";
-import TrackSchedules from "./pages/user/truck/TrackSchedules";
+import DriverDashboard from "./pages/driver/pages/driverDashboard";
 
 function App() {
   return (
@@ -38,8 +38,9 @@ function App() {
           <Route exact path="/user/profile" Component={Profile} />
 
           {/* Truck Route */}
-          <Route exact path="/truck/" Component={TruckAuth} />
-          <Route exact path="/truck/schedules" Component={TrackSchedules} />
+          {/* Driver Route */}
+          <Route exact path="/driver-login" Component={TruckAuth} />
+          <Route exact path="/driver" Component={DriverDashboard} />
 
           {/* Admin Route */}
           <Route exact path="/admin" Component={Dashboard} />

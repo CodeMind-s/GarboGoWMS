@@ -7,6 +7,7 @@ import email from "../../../assets/icons/email.png";
 import phone from "../../../assets/icons/phone.png";
 import address from "../../../assets/icons/location.png";
 import dropdown from "../../../assets/icons/dropdown.png";
+import editprofile from "../../../assets/icons/editprofile.png";
 
 import Off40 from "../../../assets/vouchers/40off.png";
 import Off50 from "../../../assets/vouchers/50off.png";
@@ -17,8 +18,19 @@ const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [imageSelected, setImageSelected] = useState("");
+
   const [isToggleDropdownforInformation, setToggleDropdownforInformation] =
     useState(false);
+  const [updateProfile, setUpdateProfile] = useState({
+    username: "",
+    email: "",
+    gender: "",
+    contact: "",
+    address: "",
+    profileImage: "",
+  });
 
   const fetchProfile = async () => {
     try {
@@ -30,6 +42,23 @@ const UserProfile = () => {
   };
 
   useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const userProfile = await AuthService.getCurrentUserDetails();
+        setProfile(userProfile);
+        setUpdateProfile({
+          username: userProfile.username || "",
+          email: userProfile.email || "",
+          gender: userProfile.gender || "",
+          contact: userProfile.contact || "",
+          address: userProfile.address || "",
+          profileImage: userProfile.profileImage || "",
+        });
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
     fetchProfile();
   }, []);
 
@@ -38,28 +67,81 @@ const UserProfile = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInfo((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setUpdateProfile((prev) => {
+      console.log("Updating:", name, value);
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
   };
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+
   const toggleDropdownforInformation = () => {
     setToggleDropdownforInformation(!isToggleDropdownforInformation);
   };
 
+  const uploadImage = async () => {
+    const data = new FormData();
+    data.append("file", imageSelected);
+    data.append("upload_preset", "GarboGoUser_Preset");
+    data.append("cloud_name", "dg8cpnx1m");
+
+    console.log("reached uploadimage");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dg8cpnx1m/image/upload",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
+    console.log("completed uploadimage");
+    const imageUrl = await res.json();
+    return imageUrl.url;
+  };
+
+  const handleUpdate = async () => {
+    console.log("Profile to update:", updateProfile);
+    setIsLoading(true);
+
+    try {
+      let profileImageUrl = updateProfile.profileImage;
+
+      if (imageSelected) {
+        profileImageUrl = await uploadImage();
+      }
+
+      const updatedProfileData = {
+        ...updateProfile,
+        profileImage: profileImageUrl || updateProfile.profileImage, // Keep old image if no new image is uploaded
+      };
+
+      const response = await AuthService.updateUser(updatedProfileData);
+      alert("Profile updated successfully!");
+
+      setProfile((prevProfile) => ({
+        ...prevProfile,
+        ...updatedProfileData,
+      }));
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+      setIsLoading(false);
+    }
+  };
+
   return (
     <UserDrawer>
-      <div className="flex items-center justify-center ">
-        <div className="  w-[100%] h-full p-5 flex items-start justify-center">
-          <div className=" w-[50%]">
-            <div className="h-auto rounded border-[3px] p-5 m-4 border-[#48752c]">
-              <div className="flex justify-between items-center">
-                <h1 className=" font-bold text-[21px] my-1">
-                  Update Personal Information
-                </h1>
+      <div className="flex flex-col items-center justify-center ">
+        <div className=" w-full rounded border-[3px]  p-5 ">
+          <div className=" flex justify-around ">
+            <div className="flex justify-center w-full">
+              <div className=" my-5 justify-center flex mx-5 ">
                 <img
                   src={dropdown}
                   alt="dropdown"
@@ -239,13 +321,16 @@ const UserProfile = () => {
                 />
               </div>
 
-              <div className="w-[70%] justify-center flex">
-                <div className=" flex flex-col">
+              <div className="justify-center flex">
+                <div className=" flex flex-col justify-center space-y-3">
+                  <div className=" text-[24px] font-bold text-[#48752c]">
+                    <span>{profile.username}</span>
+                  </div>
                   <div className="">
                     <img
                       src={address}
                       alt="Logo"
-                      className="mx-auto w-[20px] h-[20px] mr-4 my-4 inline-block"
+                      className="mx-auto w-[20px] h-[20px] mr-4  inline-block"
                     />
                     <span>{profile.address}</span>
                   </div>
@@ -253,7 +338,7 @@ const UserProfile = () => {
                     <img
                       src={email}
                       alt="Logo"
-                      className="mx-auto w-[20px] h-[20px] mr-4 my-4 inline-block"
+                      className="mx-auto w-[20px] h-[20px] mr-4  inline-block"
                     />
                     <span>{profile.email}</span>
                   </div>
@@ -261,25 +346,221 @@ const UserProfile = () => {
                     <img
                       src={phone}
                       alt="Logo"
-                      className="mx-auto w-[20px] h-[20px] mr-4 my-4 inline-block"
+                      className="mx-auto w-[20px] h-[20px] mr-4 inline-block"
                     />
                     <span>{profile.contact}</span>
                   </div>
                 </div>
               </div>
             </div>
-            <div className=" my-2 w-[95%] bg-[#f9da78] text-center  rounded-3xl shadow-lg p-3">
-              <h1 className="text-[24px] py-1 text-[#48752c] font-bold">
-                {profile.username}
-              </h1>
-            </div>
-            <div className="my-2 w-[95%] bg-[#f9da78] text-center  rounded-3xl shadow-lg p-2">
-              <h1 className="text-[24px] font-bold  text-[#48752c] ">
-                {profile.ecoscore}
-              </h1>
-              <h1 className="text-[18px] ">Eco Score Points</h1>
+            <div className="relative flex flex-col items-end justify-end w-[30%]">
+              <div
+                onClick={toggleDropdownforInformation}
+                className="absolute top-0 right-0 bg-gray-300 hover:bg-[#f9da78] w-[50px] shadow-xl h-[50px] flex items-center justify-center rounded-full mb-2"
+              >
+                <img
+                  src={editprofile}
+                  alt="edit"
+                  className="mx-auto w-[25px] h-[25px] inline-block"
+                />
+              </div>
+              <div className="items-center justify-center px-5 flex flex-col bg-[#48752c] text-center rounded-3xl shadow-lg p-2">
+                <h1 className="text-[28px] font-bold text-[#f9da78]">
+                  {profile.ecoscore}
+                </h1>
+                <h1 className="text-[16px] text-white">Eco Score Points</h1>
+              </div>
             </div>
           </div>
+        </div>
+        <div className="w-full h-full py-5 flex items-start">
+          <div className=" w-[100%] h-auto rounded border-[3px] p-3 mr-2 border-[#48752c]">
+            <div className="flex justify-between items-center">
+              <h1 className="font-bold text-[21px] my-1">
+                Update Personal Information
+              </h1>
+              <img
+                src={dropdown}
+                alt="dropdown"
+                className={`w-[20px] h-[20px] cursor-pointer transition-transform duration-300 ${
+                  isToggleDropdownforInformation ? "rotate-180" : "rotate-0"
+                }`}
+                onClick={toggleDropdownforInformation}
+              />
+            </div>
+            {isToggleDropdownforInformation && (
+              <div className="m-4">
+                <div className="flex flex-col justify-around space-y-2 ">
+                  <h1 className="font-bold">Name: </h1>
+                  <input
+                    type="text"
+                    name="username"
+                    value={updateProfile.username}
+                    onChange={handleInputChange}
+                    placeholder="Enter your name"
+                    className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                  />
+                  <h1 className="font-bold">Email: </h1>
+                  <input
+                    type="email"
+                    name="email"
+                    value={updateProfile.email}
+                    onChange={handleInputChange}
+                    placeholder="Enter your email"
+                    className="py-2 px-5 bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                  />
+                </div>
+                <div className="flex flex-col justify-around space-y-4">
+                  <h1 className="font-bold text-lg">Gender:</h1>
+                  <div className="flex items-center space-x-8">
+                    {" "}
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="Male"
+                        checked={updateProfile.gender === "Male"}
+                        onChange={() =>
+                          setUpdateProfile({
+                            ...updateProfile,
+                            gender: "Male",
+                          })
+                        }
+                        className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                      <span className="text-gray-700">Male</span>
+                    </label>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="Female"
+                        checked={updateProfile.gender === "Female"}
+                        onChange={() =>
+                          setUpdateProfile({
+                            ...updateProfile,
+                            gender: "Female",
+                          })
+                        }
+                        className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                      <span className="text-gray-700">Female</span>
+                    </label>
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="Other"
+                        checked={updateProfile.gender === "Other"}
+                        onChange={() =>
+                          setUpdateProfile({
+                            ...updateProfile,
+                            gender: "Other",
+                          })
+                        }
+                        className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                      />
+                      <span className="text-gray-700">Other</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="items-center flex flex-col justify-center">
+                  <div className="w-full my-2">
+                    <h1 className="font-bold">Current Address: </h1>
+                    <input
+                      type="text"
+                      name="address"
+                      value={updateProfile.address}
+                      onChange={handleInputChange}
+                      placeholder="Enter your address"
+                      className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                    />
+                  </div>
+                  <div className="w-full my-2">
+                    <h1 className="font-bold"> Upload Profile Image </h1>
+                    <input
+                      type="file"
+                      name="image"
+                      id="image"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 :bg-gray-700 :border-gray-600 :placeholder-gray-400 :text-white :focus:ring-blue-500 :focus:border-blue-500"
+                      onChange={(e) => setImageSelected(e.target.files[0])}
+                    />
+                  </div>
+                </div>
+                <div className="mt-5 w-full text-center bg-[#f9da78] text-[16px] rounded-full inline-block">
+                  <button
+                    className="px-5 py-2 text-center text-black"
+                    onClick={handleUpdate}
+                  >
+                    Update Information
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* <div className="w-[50%] h-auto rounded border-[3px] p-4  border-[#48752c]">
+            <div className="flex justify-between items-center">
+              <h1 className="font-bold text-[21px]">Change Password</h1>
+              <img
+                src={dropdown}
+                alt="dropdown"
+                className={`w-[20px] h-[20px] cursor-pointer transition-transform duration-300 ${
+                  isDropdownOpen ? "rotate-180" : "rotate-0"
+                }`}
+                onClick={toggleDropdown}
+              />
+            </div>
+
+            {isDropdownOpen && (
+              <div className=" flex flex-col  m-3">
+                <div className="w-full my-2">
+                  <h1 className="font-bold">Current Password:</h1>
+                  <input
+                    type="password"
+                    name="currentPassword"
+                    // value={passwords.currentPassword}
+                    // onChange={handlePasswordChange}
+                    placeholder="Current Password"
+                    className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                  />
+                </div>
+                <div className="w-full my-2">
+                  <h1 className="font-bold">New Password:</h1>
+                  <input
+                    type="password"
+                    name="newPassword"
+                    // value={passwords.newPassword}
+                    // onChange={handlePasswordChange}
+                    placeholder="New Password"
+                    className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                  />
+                </div>
+                <div className="w-full my-2">
+                  <h1 className="font-bold">Confirm New Password:</h1>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    // value={passwords.confirmPassword}
+                    // onChange={handlePasswordChange}
+                    placeholder="Confirm New Password"
+                    className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
+                  />
+                </div>
+
+                <div className="mt-5 bg-[#f9da78] text-center text-[16px] rounded-full inline-block">
+                  <button
+                    className="px-5 py-2  text-black"
+                    // onClick={handlePasswordUpdate}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "Updating..." : "Update Password"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div> */}
         </div>
       </div>
       <div className=" w-[95%] mx-auto mb-10">

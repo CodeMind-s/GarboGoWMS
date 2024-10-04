@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ResponsiveDrawer from "../components/ResposiveDrawer";
-// import { deleteGarbage, getAllinquiries } from "../../../api/garbageApi";
+import { deleteInquiry, getAllInquiries } from "../../../api/inquiryApi";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { ToastContainer, toast } from "react-toastify";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import "react-toastify/dist/ReactToastify.css";
 
 // MUI
@@ -14,12 +16,19 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { deleteInquiry, getAllInquiries } from "../../../api/inquiryApi";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
 
 const AdminInquiries = () => {
   const [inquiries, setInquiries] = useState([]);
+  const [filteredInquiries, setFilteredInquiries] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [selectedInquiryId, setSelectedInquiryId] = useState(null);
+  const [stateFilter, setStateFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
 
   const fetchAllInquiries = async () => {
@@ -38,6 +47,21 @@ const AdminInquiries = () => {
     fetchAllInquiries();
     // console.log(inquiries);
   }, []);
+
+  useEffect(() => {
+    filterInquiries();
+  }, [statusFilter, stateFilter, inquiries]);
+
+  const filterInquiries = () => {
+    let filtered = inquiries;
+    if (statusFilter) {
+      filtered = filtered.filter((inquiry) => inquiry.status === statusFilter);
+    }
+    if (stateFilter) {
+      filtered = filtered.filter((inquiry) => inquiry.state === stateFilter);
+    }
+    setFilteredInquiries(filtered);
+  };
 
   const handleClickOpen = (id) => {
     // console.log(`id => `, id);
@@ -91,9 +115,113 @@ const AdminInquiries = () => {
     navigate("/admin/inquiries/update", { state: { inquiry } });
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    const imgLogo = new Image();
+    imgLogo.src = "../src/assets/GarboGo.png";
+
+    console.log("Image path: ", imgLogo.src);
+    imgLogo.onload = () => {
+      //Header
+      doc.addImage(imgLogo, "PNG", 14, 5, 55, 15);
+
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor("48752c");
+      doc.setFontSize(16);
+      doc.text("GarboGo Waste Management System", 95, 15);
+
+      // Add title
+      doc.setFontSize(20);
+      doc.text("Filtered Inquiries Report", 14, 28);
+
+      // Add current date
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 35);
+
+      // Summary Table by Status and State
+      autoTable(doc, {
+        startY: 42,
+        head: [["Summary", "Count"]],
+        body: [
+          ["Total Inquiries", filteredInquiries.length],
+          [
+            "Pending Inquiries",
+            filteredInquiries.filter((i) => i.status === "Pending").length,
+          ],
+          [
+            "In Progress Inquiries",
+            filteredInquiries.filter((i) => i.status === "In Progress").length,
+          ],
+          [
+            "Resolved Inquiries",
+            filteredInquiries.filter((i) => i.status === "Resolved").length,
+          ],
+        ],
+        theme: "grid",
+      });
+
+      // Add Inquiry Data Table
+      autoTable(doc, {
+        startY: doc.autoTable.previous.finalY + 10,
+        head: [
+          ["Email", "Phone", "Title", "Type", "Status", "Description", "Date"],
+        ],
+        body: filteredInquiries.map((inquiry) => [
+          inquiry.email,
+          inquiry.phone,
+          inquiry.title,
+          inquiry.inquiryType,
+          inquiry.status,
+          inquiry.description,
+          new Date(inquiry.date).toLocaleString(),
+        ]),
+        theme: "grid",
+      });
+
+      // Save the PDF
+      const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
+      doc.save(`Inquiries_Report_${generatedDate}.pdf`);
+
+      // Show success notification
+      toast.success("PDF Generated Successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
+  };
+
   return (
     <ResponsiveDrawer>
       <div className="mb-28 shadow-md rounded-lg">
+        <div className="flex justify-between p-4">
+          <div className="flex items-center space-x-4">
+            <span className="font-semibold">Filter By</span>
+            <FormControl className="w-44">
+              <InputLabel id="status-filter-label">Status</InputLabel>
+              <Select
+                labelId="status-filter-label"
+                value={statusFilter}
+                label="Status"
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <MenuItem value="">All</MenuItem>
+                <MenuItem value="Pending">Pending</MenuItem>
+                <MenuItem value="Resolved">Resolved</MenuItem>
+                <MenuItem value="In Progress">In Progress</MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+          <Button variant="contained" color="success" onClick={downloadPDF}>
+            Generate Report
+          </Button>
+        </div>
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 :text-gray-400">
           <caption className="p-5 text-lg font-semibold text-left rtl:text-right text-[#48752c] bg-white :text-white :bg-gray-800">
             Inquiry Requests
@@ -133,70 +261,51 @@ const AdminInquiries = () => {
             </tr>
           </thead>
           <tbody>
-            {inquiries.length > 0 ? (
-              inquiries
-                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by createdAt in descending order
+            {filteredInquiries.length > 0 ? (
+              filteredInquiries
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)) // Sort by date
                 .map((inquiry) => (
-                  <tr
-                    className="bg-white border-b :bg-gray-800 :border-gray-700"
-                    key={inquiry._id}
-                  >
-                    <th
-                      scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
-                    >
-                      {inquiry.email}
-                    </th>
+                  <tr className="bg-white border-b" key={inquiry._id}>
+                    <td className="px-6 py-4">{inquiry.email}</td>
                     <td className="px-6 py-4">{inquiry.phone}</td>
-
-                    <td className="px-6 py-4 capitalize">
-                      <span
-                      // className={`uppercase font-semibold text-[12px] px-2.5 py-0.5 rounded ${getTypeClassName(
-                      //   inquiry.typeOfinquiry
-                      // )}`}
-                      >
-                        {inquiry.title}
-                      </span>
-                    </td>
+                    <td className="px-6 py-4">{inquiry.title}</td>
                     <td className="px-6 py-4">{inquiry.inquiryType}</td>
                     <td className="px-6 py-4">{inquiry.description}</td>
                     <td className="px-6 py-4">
                       {new Date(inquiry.date).toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 capitalize">
+                    <td className="px-6 py-4">
                       <span
-                        className={`uppercase font-semibold text-[12px] px-2.5 py-0.5 rounded ${getStatusClassName(
+                        className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClassName(
                           inquiry.status
                         )}`}
                       >
                         {inquiry.status}
                       </span>
                     </td>
-                    <td className="px- py-4 text-right">
-                      <a
+                    <td className="px-6 py-4">{inquiry.state}</td>
+                    <td className="px-4 py-4">
+                      <button
+                        className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                         onClick={() => handleEditClick(inquiry)}
-                        className="font-medium text-gray-400 :text-blue-500 cursor-pointer"
                       >
                         <EditIcon />
-                      </a>
+                      </button>
                     </td>
-                    <td className="px-3 py-4 text-right">
-                      <a
+                    <td className="px-4 py-4">
+                      <button
+                        className="font-medium text-red-600 dark:text-red-500 hover:underline"
                         onClick={() => handleClickOpen(inquiry._id)}
-                        className="font-medium text-red-600 :text-blue-500 cursor-pointer"
                       >
                         <DeleteIcon />
-                      </a>
+                      </button>
                     </td>
                   </tr>
                 ))
             ) : (
-              <tr>
-                <td
-                  colSpan="8"
-                  className="w-full text-md text-gray-600 font-semibold text-center py-4"
-                >
-                  No inquiry requests found!
+              <tr className="bg-white border-b">
+                <td className="px-6 py-4 text-center" colSpan="10">
+                  No inquiries found.
                 </td>
               </tr>
             )}

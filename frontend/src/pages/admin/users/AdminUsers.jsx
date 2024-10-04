@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ResponsiveDrawer from "../components/ResposiveDrawer";
 import AuthService from "../../../api/userApi";
-import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ToastContainer, toast } from "react-toastify";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-import logo from "../../../assets/GarboGo.png";
 import userimage from "../../../assets/user.png";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -81,19 +79,19 @@ const AdminUsers = () => {
       console.log("No users available");
       return null;
     }
-
+  
     const highestEcoUser = users.reduce((prev, current) => {
-      const prevEcoScore =
-        typeof prev.ecoscore === "number" ? prev.ecoscore : 0;
-      const currentEcoScore =
-        typeof current.ecoscore === "number" ? current.ecoscore : 0;
-
+      // Convert eco scores from string to number
+      const prevEcoScore = parseFloat(prev.ecoscore) || 0;
+      const currentEcoScore = parseFloat(current.ecoscore) || 0;
+  
       return prevEcoScore > currentEcoScore ? prev : current;
     });
-
+  
     console.log("User with the highest eco score:", highestEcoUser);
     return highestEcoUser;
   };
+  
 
   const calculateMaleFemaleRatio = () => {
     if (users.length === 0) return { male: 0, female: 0 };
@@ -115,37 +113,61 @@ const AdminUsers = () => {
     const doc = new jsPDF();
     const imgLogo = new Image();
     imgLogo.src = "../src/assets/GarboGo.png";
-
+  
     console.log("Image path: ", imgLogo.src);
     imgLogo.onload = () => {
       //Header
       doc.addImage(imgLogo, "PNG", 14, 10, 55, 15);
-
+  
       doc.setFont("helvetica", "bold");
       doc.setTextColor("48752c");
       doc.setFontSize(16);
       doc.text("GarboGo Waste Management System", 95, 18);
-
+  
       // Title
       doc.setFont("helvetica", "normal");
       doc.setTextColor("000000");
       doc.setFontSize(18);
       doc.text("User Management Report", 14, 40);
-
+  
       doc.setFontSize(11);
       doc.setTextColor(100);
-
+  
       // Date and Time of Report Generation
       doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 48);
-
+  
       // Table for Garbage Collection Summary
       autoTable(doc, {
         startY: 58,
-        head: [["Summary", "Count"]],
-        body: [["Total Accounts Registered", userData.totalUsers]],
+        head: [["Summary", ""]],
+        body: [
+          ["Total Accounts Registered", userData.totalUsers],
+          ["Highest Eco Score Membership by", userData.highestEcoScore],
+          ["Ratio of Male Memberships",userData.malemembers+"%"],
+          ["Ratio of Female Memberships",userData.femalemembers+"%"],
+
+        ],
         theme: "grid",
       });
-
+  
+      // Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text(
+          `Page ${i} of ${pageCount}`,
+          doc.internal.pageSize.getWidth() - 20, // Right-aligned
+          doc.internal.pageSize.getHeight() - 10 // Positioned at the bottom
+        );
+        doc.text(
+          "GarboGo Waste Management System - Confidential",
+          14, // Left-aligned
+          doc.internal.pageSize.getHeight() - 10 // Positioned at the bottom
+        );
+      }
+  
       // Save the PDF
       const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
       doc.save(`User_Management_Report_${generatedDate}.pdf`);
@@ -161,6 +183,7 @@ const AdminUsers = () => {
       });
     };
   };
+  
 
   return (
     <ResponsiveDrawer>
@@ -201,6 +224,10 @@ const AdminUsers = () => {
           onClick={() =>
             downloadPDF({
               totalUsers: calculateTotalUsers(),
+              highestEcoScore: calculateHighestEcoScore()?.username,
+              malemembers: calculateMaleFemaleRatio().male,
+              femalemembers: calculateMaleFemaleRatio().female,
+
             })
           }
         >

@@ -12,6 +12,7 @@ export default function Garbage_Add_Form() {
 
   // Initialize state for all form fields in one object
   const [garbageEntryData, setGarbageEntryData] = useState({
+    area: "",
     address: "",
     mobileNumber: "",
     date: "",
@@ -21,8 +22,15 @@ export default function Garbage_Add_Form() {
   });
 
   // Destructure state variables
-  const { address, mobileNumber, date, latitude, longitude, typeOfGarbage } =
-    garbageEntryData;
+  const {
+    area,
+    address,
+    mobileNumber,
+    date,
+    latitude,
+    longitude,
+    typeOfGarbage,
+  } = garbageEntryData;
 
   const [touched, setTouched] = useState({});
   const [isSubmit, setIsSubmit] = useState(false);
@@ -45,6 +53,7 @@ export default function Garbage_Add_Form() {
     setIsLoading(true);
 
     const newGarbageEntry = {
+      area,
       address,
       mobileNumber,
       latitude,
@@ -138,7 +147,7 @@ export default function Garbage_Add_Form() {
             <Divider className="mb-6" />
             <br />
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols- gap-6">
+              <div className="grid grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
                     Contact Number
@@ -170,6 +179,58 @@ export default function Garbage_Add_Form() {
                         * Invalid phone number. Must be 10 digits.
                       </p>
                     )}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Select Area
+                  </label>
+                  <select
+                    value={area} // Bind to the selected value
+                    name="area"
+                    onBlur={() => handleBlur("area")}
+                    onChange={handleChange}
+                    className={`mt-1 p-3 w-full rounded-md border ${
+                      !area && touched.area
+                        ? "border-red-500"
+                        : "border-gray-300"
+                    } focus:border-green-500 focus:ring focus:ring-green-200`}
+                  >
+                    <option value="" disabled>
+                      -- Select Area --
+                    </option>
+                    {/* Main towns in Colombo district */}
+                    <option value="Colombo 1">Colombo 1 (Fort)</option>
+                    <option value="Colombo 2">Colombo 2 (Slave Island)</option>
+                    <option value="Colombo 3">Colombo 3 (Kollupitiya)</option>
+                    <option value="Colombo 4">Colombo 4 (Bambalapitiya)</option>
+                    <option value="Colombo 5">Colombo 5 (Havelock Town)</option>
+                    <option value="Colombo 6">Colombo 6 (Wellawatte)</option>
+                    <option value="Colombo 7">
+                      Colombo 7 (Cinnamon Gardens)
+                    </option>
+                    <option value="Colombo 8">Colombo 8 (Borella)</option>
+                    <option value="Colombo 9">Colombo 9 (Dematagoda)</option>
+                    <option value="Colombo 10">Colombo 10 (Maradana)</option>
+                    <option value="Colombo 11">Colombo 11 (Pettah)</option>
+                    <option value="Colombo 12">Colombo 12 (Hulftsdorp)</option>
+                    <option value="Colombo 13">Colombo 13 (Kotahena)</option>
+                    <option value="Colombo 14">Colombo 14 (Grandpass)</option>
+                    <option value="Colombo 15">Colombo 15 (Mutwal)</option>
+                    <option value="Dehiwala">Dehiwala</option>
+                    <option value="Mount Lavinia">Mount Lavinia</option>
+                    <option value="Moratuwa">Moratuwa</option>
+                    <option value="Kotte">Sri Jayawardenepura Kotte</option>
+                    <option value="Rajagiriya">Rajagiriya</option>
+                    <option value="Battaramulla">Battaramulla</option>
+                    <option value="Koswatta">Koswatta</option>
+                    <option value="Malabe">Malabe</option>
+                    <option value="Kothalawala">Kothalawala</option>
+                    <option value="Kaduwela">Kaduwela</option>
+                    <option value="Nugegoda">Nugegoda</option>
+                  </select>
+                  {!area && touched.area && (
+                    <p className="text-red-600 text-sm mt-1">* Required</p>
+                  )}
                 </div>
               </div>
 
@@ -224,7 +285,9 @@ export default function Garbage_Add_Form() {
                   } focus:border-green-500 focus:ring focus:ring-green-200`}
                 />
                 {!address && touched.address && (
-                  <p className="text-red-600 text-sm mt-1">* Required</p>
+                  <p className="text-red-600 text-sm mt-1">
+                    * Address Required
+                  </p>
                 )}
               </div>
 

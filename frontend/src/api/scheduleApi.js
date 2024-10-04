@@ -10,6 +10,17 @@ const createSchedule = async (schedule) => {
   }
 }; // Create a new Schedule
 
+const getTruckSchedules = async (id) => {
+  // Get all trucks
+  try {
+    const schedules = await new API().get(`schedule/truck-schedules/${id}`, {});
+    return schedules;
+  } catch (error) {
+    console.error("Error fetching Schedules:", error.message);
+    throw error; // Rethrow the error for the component to handle
+  }
+}; // Get all Schedule
+
 const getAllSchedules = async () => {
   // Get all trucks
   try {
@@ -44,5 +55,5 @@ const deleteSchedule = async (id) => {
   }
 }; // Delete a Schedule
 
-export { createSchedule, getAllSchedules, updateSchedule, deleteSchedule };
+export { createSchedule, getAllSchedules, updateSchedule, deleteSchedule, getTruckSchedules};
 // Export the functions for use in the frontend

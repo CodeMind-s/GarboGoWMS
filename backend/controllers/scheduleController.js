@@ -12,9 +12,9 @@ import asyncHandler from "../middlewares/asyncHandler.js";
  * @returns {Object} - A JSON object containing the newly created schedule data
  */
 const createSchedule = asyncHandler(async (req, res) => {
-  const { truckId, area, time, date} = req.body;
+  const { truckId, area, time, date } = req.body;
 
-  if (!truckId || !area || !time || !date) {
+  if (!truckId || !area || !time || !date ) {
     res.status(400);
     throw new Error("Please fill all required fields.");
   }
@@ -24,6 +24,9 @@ const createSchedule = asyncHandler(async (req, res) => {
     area,
     time,
     date,
+    longitude: null,
+    latitude: null,
+    status: 'Pending'
   });
 
   const createdSchedule = await schedule.save();
@@ -80,7 +83,7 @@ const getScheduleById = asyncHandler(async (req, res) => {
  * @returns {Object} - The updated garbage request
  */
 const updateSchedule = asyncHandler(async (req, res) => {
-  const { truckId, area, time, date} = req.body;
+  const { truckId, area, time, date, longitude, latitude, status} = req.body;
 
   const schedule = await Schedule.findById(req.params.id);
 
@@ -89,6 +92,9 @@ const updateSchedule = asyncHandler(async (req, res) => {
     schedule.area = area || schedule.area;
     schedule.time = time || schedule.time;
     schedule.date = date || schedule.date;
+    schedule.longitude = longitude || schedule.longitude;
+    schedule.latitude = latitude || schedule.latitude;
+    schedule.status = status || schedule.status;
     // schedule.collectionDate = collectionDate || new Date(); // Set to current system date if not provided
 
     const updatedSchedule = await schedule.save();

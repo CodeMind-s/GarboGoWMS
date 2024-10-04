@@ -75,14 +75,27 @@ const AdminGarbageUpdate = () => {
                 />
               </div>
             </div>
-            <div>
-              <label className="block text-gray-600 font-medium">Address</label>
-              <input
-                type="text"
-                value={location.state.garbage.address}
-                readOnly
-                className="mt-2 block w-full p-3 border border-gray-300 rounded-lg bg-gray-50"
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-gray-600 font-medium">Area</label>
+                <input
+                  type="text"
+                  value={location.state.garbage.area}
+                  readOnly
+                  className="mt-2 block w-full p-3 border border-gray-300 rounded-lg bg-gray-50"
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 font-medium">
+                  Address
+                </label>
+                <input
+                  type="text"
+                  value={location.state.garbage.address}
+                  readOnly
+                  className="mt-2 block w-full p-3 border border-gray-300 rounded-lg bg-gray-50"
+                />
+              </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>

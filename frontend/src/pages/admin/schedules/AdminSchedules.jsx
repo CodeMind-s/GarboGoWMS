@@ -109,9 +109,9 @@ export default function AdminSchedules() {
               <th scope="col" className="px-6 py-3">
                 Date
               </th>
-              {/* <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-6 py-3">
                 Status
-              </th> */}
+              </th>
               <th scope="col" className="px-4 py-3">
                 <span className="sr-only"></span>
               </th>
@@ -142,24 +142,11 @@ export default function AdminSchedules() {
                     <td className="px-6 py-4">{schedule.time}</td>
                     <td className="px-6 py-4">{new Date(schedule.date).toLocaleDateString()}</td>
 
-                    {/* <td className="px-6 py-4 capitalize">
-                      <span
-                        className={`uppercase font-semibold text-[12px] w-fit px-2.5 py-0.5 rounded flex items-center ${getStatusClassName(
-                          truck.availabilityStatus
-                        )}`}
-                      >
-                        <span
-                          className={`w-2 h-2 rounded-full mr-2 ${
-                            truck.availabilityStatus
-                              ? "bg-green-500"
-                              : "bg-red-500"
-                          }`}
-                        ></span>
-                        {truck.availabilityStatus
-                          ? "Available"
-                          : "Not Available"}
+                    <td className="px-6 py-4 capitalize">
+                      <span className={`px-4 rounded-md bg-opacity-30 py-1 text-center text-sm font-semibold ${schedule.status === "Pending" ? ' text-yellow-700 bg-yellow-500' : schedule.status === "In-Progress" ? ' text-red-700 bg-red-500' : ' text-green-700 bg-green-500'}`}>
+                        {schedule.status}
                       </span>
-                    </td> */}
+                    </td> 
                     <td className="px- py-4 text-right ">
                       {/* <a
                         onClick={() => handleEditClick(truck)}

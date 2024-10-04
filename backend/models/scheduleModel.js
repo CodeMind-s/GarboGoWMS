@@ -18,6 +18,16 @@ const scheduleSchema = mongoose.Schema(
     date: {
       type: Date,
     },
+    longitude: {
+      type: Number,
+    },
+    latitude: {
+      type: Number,
+    },
+    status: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

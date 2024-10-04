@@ -14,9 +14,9 @@ const router = express.Router();
 router
   .route("/")
   .post(authenticate, authorizeAdmin, createSchedule)
-  .get(authenticate, authorizeAdmin, getAllSchedules);
+  .get(authenticate, getAllSchedules);
 
-router.route("/truck-schedules/:id").get(authenticate, getTruckSchedules);
+router.route("/truck-schedules/:id").get( getTruckSchedules);
 
 router
   .route("/:id")

@@ -18,12 +18,10 @@ import Off70 from "../../../assets/vouchers/70off.png";
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [imageSelected, setImageSelected] = useState("");
 
-  const [isToggleDropdownforInformation, setToggleDropdownforInformation] =
-    useState(false);
+  const [isToggleDropdownforInformation, setToggleDropdownforInformation] = useState(false);
   const [updateProfile, setUpdateProfile] = useState({
     username: "",
     email: "",
@@ -66,9 +64,6 @@ const UserProfile = () => {
         [name]: value,
       };
     });
-  };
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
   };
 
   const toggleDropdownforInformation = () => {
@@ -328,68 +323,6 @@ const UserProfile = () => {
               </div>
             )}
           </div>
-
-          {/* <div className="w-[50%] h-auto rounded border-[3px] p-4  border-[#48752c]">
-            <div className="flex justify-between items-center">
-              <h1 className="font-bold text-[21px]">Change Password</h1>
-              <img
-                src={dropdown}
-                alt="dropdown"
-                className={`w-[20px] h-[20px] cursor-pointer transition-transform duration-300 ${
-                  isDropdownOpen ? "rotate-180" : "rotate-0"
-                }`}
-                onClick={toggleDropdown}
-              />
-            </div>
-
-            {isDropdownOpen && (
-              <div className=" flex flex-col  m-3">
-                <div className="w-full my-2">
-                  <h1 className="font-bold">Current Password:</h1>
-                  <input
-                    type="password"
-                    name="currentPassword"
-                    // value={passwords.currentPassword}
-                    // onChange={handlePasswordChange}
-                    placeholder="Current Password"
-                    className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
-                  />
-                </div>
-                <div className="w-full my-2">
-                  <h1 className="font-bold">New Password:</h1>
-                  <input
-                    type="password"
-                    name="newPassword"
-                    // value={passwords.newPassword}
-                    // onChange={handlePasswordChange}
-                    placeholder="New Password"
-                    className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
-                  />
-                </div>
-                <div className="w-full my-2">
-                  <h1 className="font-bold">Confirm New Password:</h1>
-                  <input
-                    type="password"
-                    name="confirmPassword"
-                    // value={passwords.confirmPassword}
-                    // onChange={handlePasswordChange}
-                    placeholder="Confirm New Password"
-                    className="py-2 px-5 w-full bg-[#64625c1a] text-[16px] rounded-br-full rounded-bl-full rounded-tl-full"
-                  />
-                </div>
-
-                <div className="mt-5 bg-[#f9da78] text-center text-[16px] rounded-full inline-block">
-                  <button
-                    className="px-5 py-2  text-black"
-                    // onClick={handlePasswordUpdate}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Updating..." : "Update Password"}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div> */}
         </div>
       </div>
       <div className=" w-[95%] mx-auto ">
@@ -423,7 +356,7 @@ const UserProfile = () => {
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
                 {profile.ecoscore >= 500 && (
                   <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    className=" py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "upright",
@@ -460,7 +393,7 @@ const UserProfile = () => {
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
                 {profile.ecoscore >= 1000 && (
                   <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    className=" py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "upright",
@@ -496,9 +429,9 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 1500 && (
+                {profile.ecoscore >= 1500 && (
                   <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    className=" py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "upright",
@@ -532,17 +465,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 2000 && (
-                  <div
-                    className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
-                    style={{
-                      writingMode: "vertical-rl",
-                      textOrientation: "upright",
-                    }}
-                  >
-                    COLLECT
-                  </div>
-                )}
+                {profile.ecoscore >= 2000 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
               </div>
             </div>
           </div>

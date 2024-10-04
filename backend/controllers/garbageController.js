@@ -14,10 +14,17 @@ import User from "../models/userModel.js";
  * @returns {Object} - A JSON object containing the newly created garbage request data
  */
 const createGarbageRequest = asyncHandler(async (req, res) => {
-  const { name, longitude, latitude, typeOfGarbage, address, mobileNumber } =
+  const { area, longitude, latitude, typeOfGarbage, address, mobileNumber } =
     req.body;
 
-  if (!longitude || !latitude || !typeOfGarbage || !address || !mobileNumber) {
+  if (
+    !longitude ||
+    !latitude ||
+    !typeOfGarbage ||
+    !area ||
+    !address ||
+    !mobileNumber
+  ) {
     res.status(400);
     throw new Error("Please fill all required fields.");
   }
@@ -36,6 +43,7 @@ const createGarbageRequest = asyncHandler(async (req, res) => {
     longitude,
     latitude,
     typeOfGarbage,
+    area,
     address,
     mobileNumber,
   });
@@ -43,7 +51,8 @@ const createGarbageRequest = asyncHandler(async (req, res) => {
   const createdGarbage = await garbage.save();
 
   // Update user's ecoscore
-  user.ecoscore = (user.ecoscore || 0) + 200; // Initialize ecoscore if it doesn't exist
+  const currentEcoscore = parseInt(user.ecoscore || "0", 10); // Parse as integer with fallback to 0
+  user.ecoscore = (currentEcoscore + 200).toString(); // Initialize ecoscore if it doesn't exist
   await user.save();
 
   res.status(201).json(createdGarbage);

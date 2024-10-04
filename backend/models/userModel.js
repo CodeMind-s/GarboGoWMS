@@ -28,7 +28,7 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     ecoscore: {
-      type: Number,
+      type: String,
       required: true,
     },
     profileImage: {

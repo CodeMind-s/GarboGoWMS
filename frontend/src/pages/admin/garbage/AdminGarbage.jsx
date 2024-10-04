@@ -89,6 +89,9 @@ const AdminGarbage = () => {
           progress: undefined,
           theme: "colored",
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
       } catch (error) {
         alert(error.message);
         // console.log("Error deleting garbage: ", error);
@@ -293,25 +296,28 @@ const AdminGarbage = () => {
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 :text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 :bg-gray-700 :text-gray-400">
             <tr>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-5 py-3">
                 Name
               </th>
-              {/* <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-5 py-3">
                 Email
               </th> */}
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-5 py-3">
                 Phone Number
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-5 py-3">
                 Type
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-5 py-3">
+                Area
+              </th>
+              <th scope="col" className="px-5 py-3">
                 Address
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-5 py-3">
                 Date Requested
               </th>
-              <th scope="col" className="px-6 py-3">
+              <th scope="col" className="px-5 py-3">
                 Status
               </th>
               <th scope="col" className="px-4 py-3">
@@ -334,14 +340,14 @@ const AdminGarbage = () => {
                   >
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
+                      className="px-5 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
                     >
                       {garbage.user
                         ? garbage.user.username
                         : "No user assigned"}
                     </th>
-                    <td className="px-6 py-4">{garbage.mobileNumber}</td>
-                    <td className="px-6 py-4 capitalize">
+                    <td className="px-5 py-4">{garbage.mobileNumber}</td>
+                    <td className="px-5 py-4 capitalize">
                       <span
                         className={`uppercase font-semibold text-[12px] px-2.5 py-0.5 rounded ${getTypeClassName(
                           garbage.typeOfGarbage
@@ -350,12 +356,13 @@ const AdminGarbage = () => {
                         {garbage.typeOfGarbage}
                       </span>
                     </td>
-                    <td className="px-6 py-4">{garbage.address}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-5 py-4">{garbage.area}</td>
+                    <td className="px-5 py-4">{garbage.address}</td>
+                    <td className="px-5 py-4">
                       {" "}
                       {new Date(garbage.createdAt).toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 capitalize">
+                    <td className="px-5 py-4 capitalize">
                       <span
                         className={`uppercase font-semibold text-[12px] px-2.5 py-1 rounded-full ${getStatusClassName(
                           garbage.status

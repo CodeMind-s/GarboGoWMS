@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 function Register() {
   const [errorMessage, setErrorMessage] = useState(null);
-  const [imageSelected,setImageSelected] = useState("");
+  const [imageSelected, setImageSelected] = useState("");
   const [uploadImageUrl, setUploadImageUrl] = useState("");
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ function Register() {
     email: "",
     password: "",
     gender: "",
-    ecoscore: "", 
+    ecoscore: "",
     address: "",
     contact: "",
     confirmPassword: "",
@@ -43,17 +43,17 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    setErrorMessage(null); 
+    setErrorMessage(null);
 
     if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match!"); 
+      setErrorMessage("Passwords do not match!");
       setIsLoading(false);
       return;
     }
 
-    let uploadedImageUrl; 
-   
-    uploadedImageUrl = await uploadImage(); 
+    let uploadedImageUrl;
+
+    uploadedImageUrl = await uploadImage();
     console.log(uploadedImageUrl);
     const newUserEntry = {
       username,
@@ -69,7 +69,7 @@ function Register() {
     try {
       console.log(newUserEntry);
       await AuthService.register(newUserEntry);
-      
+
       toast.success("Your Account has been created successfully!", {
         position: "bottom-right",
         autoClose: 5000,
@@ -89,24 +89,25 @@ function Register() {
     }
   };
 
-  const uploadImage = async() => {
+  const uploadImage = async () => {
     const data = new FormData();
     data.append("file", imageSelected);
-    data.append(
-      "upload_preset","GarboGoUser_Preset"
+    data.append("upload_preset", "GarboGoUser_Preset");
+    data.append("cloud_name", "dg8cpnx1m");
+
+    console.log("reached uploadimage");
+
+    const res = await fetch(
+      "https://api.cloudinary.com/v1_1/dg8cpnx1m/image/upload",
+      {
+        method: "POST",
+        body: data,
+      }
     );
-    data.append("cloud_name","dg8cpnx1m");
 
-      console.log("reached uploadimage");
-
-      const res = await fetch("https://api.cloudinary.com/v1_1/dg8cpnx1m/image/upload",{
-        method:"POST",
-        body:data
-      })
-
-      const imageUrl = await res.json()
-      return imageUrl.url; 
-  }
+    const imageUrl = await res.json();
+    return imageUrl.url;
+  };
 
   return (
     <section className="bg-gray-50 flex flex-col items-center justify-center px-6 py-8 mx-auto">
@@ -164,8 +165,6 @@ function Register() {
                 />
               </div>
 
-              
-
               {/* Address Input */}
               <div>
                 <label
@@ -210,8 +209,8 @@ function Register() {
             </div>
 
             <div className="w-[45%] space-y-4">
-            {/* Gender Input */}
-            <div>
+              {/* Gender Input */}
+              <div>
                 <label
                   htmlFor="gender"
                   className="block mb-2 text-sm font-medium text-gray-900 :text-white"
@@ -247,8 +246,8 @@ function Register() {
                   </label>
                 </div>
               </div>
-             {/* Image Input */}
-            <div>
+              {/* Image Input */}
+              <div>
                 <label
                   htmlFor="contact"
                   className="block mb-2 text-sm font-medium text-gray-900 :text-white"
@@ -263,7 +262,6 @@ function Register() {
                   onChange={(e) => setImageSelected(e.target.files[0])}
                 />
               </div>
-              
 
               {/* Password Input */}
               <div>

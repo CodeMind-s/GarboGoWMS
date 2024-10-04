@@ -117,71 +117,84 @@ const AdminInquiries = () => {
 
   const downloadPDF = () => {
     const doc = new jsPDF();
+    const imgLogo = new Image();
+    imgLogo.src = "../src/assets/GarboGo.png";
 
-    // Add title
-    doc.setFontSize(20);
-    doc.text("Filtered Inquiries Report", 14, 22);
+    console.log("Image path: ", imgLogo.src);
+    imgLogo.onload = () => {
+      //Header
+      doc.addImage(imgLogo, "PNG", 14, 5, 55, 15);
 
-    // Add current date
-    doc.setFontSize(11);
-    doc.setTextColor(100);
-    doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 32);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor("48752c");
+      doc.setFontSize(16);
+      doc.text("GarboGo Waste Management System", 95, 15);
 
-    // Summary Table by Status and State
-    autoTable(doc, {
-      startY: 42,
-      head: [["Summary", "Count"]],
-      body: [
-        ["Total Inquiries", filteredInquiries.length],
-        [
-          "Pending Inquiries",
-          filteredInquiries.filter((i) => i.status === "Pending").length,
+      // Add title
+      doc.setFontSize(20);
+      doc.text("Filtered Inquiries Report", 14, 28);
+
+      // Add current date
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 35);
+
+      // Summary Table by Status and State
+      autoTable(doc, {
+        startY: 42,
+        head: [["Summary", "Count"]],
+        body: [
+          ["Total Inquiries", filteredInquiries.length],
+          [
+            "Pending Inquiries",
+            filteredInquiries.filter((i) => i.status === "Pending").length,
+          ],
+          [
+            "In Progress Inquiries",
+            filteredInquiries.filter((i) => i.status === "In Progress").length,
+          ],
+          [
+            "Resolved Inquiries",
+            filteredInquiries.filter((i) => i.status === "Resolved").length,
+          ],
         ],
-        [
-          "In Progress Inquiries",
-          filteredInquiries.filter((i) => i.status === "In Progress").length,
+        theme: "grid",
+      });
+
+      // Add Inquiry Data Table
+      autoTable(doc, {
+        startY: doc.autoTable.previous.finalY + 10,
+        head: [
+          ["Email", "Phone", "Title", "Type", "Status", "Description", "Date"],
         ],
-        [
-          "Resolved Inquiries",
-          filteredInquiries.filter((i) => i.status === "Resolved").length,
-        ],
-      ],
-      theme: "grid",
-    });
+        body: filteredInquiries.map((inquiry) => [
+          inquiry.email,
+          inquiry.phone,
+          inquiry.title,
+          inquiry.inquiryType,
+          inquiry.status,
+          inquiry.description,
+          new Date(inquiry.date).toLocaleString(),
+        ]),
+        theme: "grid",
+      });
 
-    // Add Inquiry Data Table
-    autoTable(doc, {
-      startY: doc.autoTable.previous.finalY + 10,
-      head: [
-        ["Email", "Phone", "Title", "Type", "Status", "Description", "Date"],
-      ],
-      body: filteredInquiries.map((inquiry) => [
-        inquiry.email,
-        inquiry.phone,
-        inquiry.title,
-        inquiry.inquiryType,
-        inquiry.status,
-        inquiry.description,
-        new Date(inquiry.date).toLocaleString(),
-      ]),
-      theme: "grid",
-    });
+      // Save the PDF
+      const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
+      doc.save(`Inquiries_Report_${generatedDate}.pdf`);
 
-    // Save the PDF
-    const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
-    doc.save(`Inquiries_Report_${generatedDate}.pdf`);
-
-    // Show success notification
-    toast.success("PDF Generated Successfully!", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+      // Show success notification
+      toast.success("PDF Generated Successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
   };
 
   return (

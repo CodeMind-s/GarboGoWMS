@@ -81,13 +81,9 @@ class AuthService {
 
   async updateUser(profileData) {
     try {
-      const response = await this.api.put(
-        "users/profile", 
-        profileData,    
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await this.api.put("users/profile", profileData, {
+        withCredentials: true,
+      });
       return response.data;
     } catch (error) {
       console.error("Error updating user profile:", error);
@@ -98,8 +94,8 @@ class AuthService {
   async logoutCurrentUser() {
     try {
       const response = await this.api.post("users/logout");
-      console.log(`response => `, response);
-      alert(response.message); // Display the success message
+      // console.log(`response => `, response);
+      // alert(response.message); // Display the success message
       // Perform any additional actions like redirecting the user to the login page
     } catch (error) {
       console.error("Error logging out:", error);

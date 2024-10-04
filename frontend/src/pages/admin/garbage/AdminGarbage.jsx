@@ -87,11 +87,11 @@ const AdminGarbage = () => {
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
         });
       } catch (error) {
         alert(error.message);
-        console.log("Error deleting garbage: ", error);
+        // console.log("Error deleting garbage: ", error);
       }
     }
   };
@@ -132,68 +132,98 @@ const AdminGarbage = () => {
 
   const downloadPDF = (garbageData) => {
     const doc = new jsPDF();
+    const imgLogo = new Image();
+    imgLogo.src = "../src/assets/GarboGo.png"; // Add your logo path
 
-    doc.setFontSize(20);
-    doc.text("Garbage Collection Report", 14, 22);
+    // console.log("Image path: ", imgLogo.src);
+    imgLogo.onload = () => {
+      // Header
+      doc.addImage(imgLogo, "PNG", 14, 10, 55, 15); // Add logo
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor("48752c"); // Change color if needed
+      doc.setFontSize(16);
+      doc.text("GarboGo Waste Management System", 95, 18); // Title in the header
 
-    doc.setFontSize(11);
-    doc.setTextColor(100);
+      // Title and Date
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor("000000");
+      doc.setFontSize(20);
+      doc.text("Garbage Collection Report", 14, 40);
 
-    // Date and Time of Report Generation
-    doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 32);
+      doc.setFontSize(11);
+      doc.setTextColor(100);
+      doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 48);
 
-    // Table for Garbage Collection Summary
-    autoTable(doc, {
-      startY: 42,
-      head: [["Summary", "Count"]],
-      body: [
-        ["Total Garbage Requests", garbageData.totalRequests],
-        ["Collected Garbages", garbageData.collectedCount],
-        ["InProgress Garbages", garbageData.inProgressCount],
-        ["Pending Garbages", garbageData.pendingCount],
-      ],
-      theme: "grid",
-    });
+      // Garbage Collection Summary Table
+      autoTable(doc, {
+        startY: 58,
+        head: [["Summary", "Total Count"]],
+        body: [
+          ["Total Garbage Requests", garbageData.totalRequests],
+          ["Collected Garbages", garbageData.collectedCount],
+          ["InProgress Garbages", garbageData.inProgressCount],
+          ["Pending Garbages", garbageData.pendingCount],
+        ],
+        theme: "grid",
+      });
 
-    // Table for Garbage Type Counts
-    autoTable(doc, {
-      startY: doc.autoTable.previous.finalY + 10, // Start after the previous table
-      head: [["Garbage Type", "Count"]],
-      body: [
-        ["Organic", garbageData.organicCount],
-        ["E-Waste", garbageData.eWasteCount],
-        ["Recyclable", garbageData.recyclableCount],
-        ["Hazardous", garbageData.hazardousCount],
-        ["Non-Recyclable", garbageData.nonRecyclableCount],
-      ],
-      theme: "grid",
-    });
+      // Garbage Type Counts Table
+      autoTable(doc, {
+        startY: doc.autoTable.previous.finalY + 10,
+        head: [["Garbage Type", "Toatal Count"]],
+        body: [
+          ["Organic", garbageData.organicCount],
+          ["E-Waste", garbageData.eWasteCount],
+          ["Recyclable", garbageData.recyclableCount],
+          ["Hazardous", garbageData.hazardousCount],
+          ["Non-Recyclable", garbageData.nonRecyclableCount],
+        ],
+        theme: "grid",
+      });
 
-    setLoader(false);
+      // Footer
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text(
+          `Page ${i} of ${pageCount}`,
+          doc.internal.pageSize.width - 30,
+          doc.internal.pageSize.height - 10
+        ); // Page number
+      }
 
-    // Save the PDF
-    const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
-    doc.save(`Garbage_Collection_Report_${generatedDate}.pdf`);
-    toast.success("Report Generated Successfully!", {
-      position: "bottom-right",
-      autoClose: 3000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+      setLoader(false);
+
+      // Save the PDF
+      const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
+      doc.save(`Garbage_Collection_Report_${generatedDate}.pdf`);
+
+      toast.success("Report Generated Successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
   };
 
   return (
     <ResponsiveDrawer>
-      <div className="mb-28 shadow-md rounded-lg">
+      <h1 className="m-5 text-2xl font-semibold text-green-900">
+        Garbage Management
+      </h1>
+      <div className="m-5 shadow-md rounded-lg">
         <div className="flex justify-between p-4">
           <div className="flex items-center space-x-4">
-            <span className="font-semibold">Filter By</span>
+            {/* <span className="font-semibold">Filter By</span> */}
             <FormControl className="w-44">
-              <InputLabel id="status-filter-label">Status</InputLabel>
+              <InputLabel id="status-filter-label">Filter By Status</InputLabel>
               <Select
                 labelId="status-filter-label"
                 value={statusFilter}
@@ -207,7 +237,7 @@ const AdminGarbage = () => {
               </Select>
             </FormControl>
             <FormControl className="w-44">
-              <InputLabel id="type-filter-label">Type</InputLabel>
+              <InputLabel id="type-filter-label">Filter By Type</InputLabel>
               <Select
                 labelId="type-filter-label"
                 value={typeFilter}

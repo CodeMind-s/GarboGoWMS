@@ -27,6 +27,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 
 // Custom Components
 import logo from "../../../assets/GarboGo.png";
+import { toast, ToastContainer } from "react-toastify";
 
 const drawerWidth = 240;
 const iconStyle = { fontSize: 20, color: "#777777" };
@@ -74,9 +75,17 @@ function UserDrawer({ children }) {
   const handleLogout = async () => {
     try {
       const response = await AuthService.logoutCurrentUser();
-      console.log("Logout status: ", response);
+      // console.log("Logout status: ", response);
+
+      toast.success("Logout successful", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+      });
       // Redirect to dashboard or home page
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       setError(error.message);
     }
@@ -213,6 +222,7 @@ function UserDrawer({ children }) {
         <Toolbar />
         <div className="usr-drawer-content">{children}</div>
       </Box>
+      <ToastContainer />
     </Box>
   );
 }

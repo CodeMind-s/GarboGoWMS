@@ -37,7 +37,7 @@ const AdminTrucks = () => {
   }, []);
 
   const handleClickOpen = (id) => {
-    console.log(`id => `, id);
+    // console.log(`id => `, id);
     setSelectedTruckId(id);
     setOpen(true);
   };

@@ -3,7 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Divider } from "@mui/material";
 import { createSchedule } from "../../../api/scheduleApi";
-import { getAllTrucks } from '../../../api/truckApi';
+import { getAllTrucks } from "../../../api/truckApi";
 import CloseIcon from "@mui/icons-material/Close"; // Assuming you have an API for truck creation
 
 export default function ScheduleCreateForm() {
@@ -11,8 +11,6 @@ export default function ScheduleCreateForm() {
 
   const handleOpenModal = () => setIsOpen(true);
   const handleCloseModal = () => setIsOpen(false);
-
-
 
   // Initialize state for all form fields in one object
   const [scheduleEntryData, setScheduleEntryData] = useState({
@@ -31,23 +29,23 @@ export default function ScheduleCreateForm() {
   const [trucks, setTrucks] = useState([]);
 
   // Phone number validation function
-//   const validatePhone = (mobile) => {
-//     return /^\d{10}$/.test(mobile); // Validates if the phone number has exactly 10 digits
-//   };
+  //   const validatePhone = (mobile) => {
+  //     return /^\d{10}$/.test(mobile); // Validates if the phone number has exactly 10 digits
+  //   };
 
-    const fetchAllTrucks = async () => {
-        try {
-        const res= await getAllTrucks();
-        setTrucks(res);
-        } catch (error) {
-        alert(error.message);
-        console.error("Error fetching trucks: ", error.message);
-        }
-    };
+  const fetchAllTrucks = async () => {
+    try {
+      const res = await getAllTrucks();
+      setTrucks(res);
+    } catch (error) {
+      alert(error.message);
+      console.error("Error fetching trucks: ", error.message);
+    }
+  };
 
-    useEffect(() => {
-        fetchAllTrucks();
-    }, []);
+  useEffect(() => {
+    fetchAllTrucks();
+  }, []);
 
   const handleChange = (e) => {
     setScheduleEntryData({
@@ -61,14 +59,14 @@ export default function ScheduleCreateForm() {
     setIsLoading(true);
 
     const newScheduleEntry = {
-        truckId,
-        area,
-        time,
-        date,
+      truckId,
+      area,
+      time,
+      date,
     };
 
     try {
-      console.log(`newScheduleEntry => `, newScheduleEntry);
+      // console.log(`newScheduleEntry => `, newScheduleEntry);
       await createSchedule(newScheduleEntry);
 
       toast.success("Your schedule entry has been submitted successfully!", {
@@ -126,7 +124,7 @@ export default function ScheduleCreateForm() {
                   <label className="block text-sm font-medium text-gray-700">
                     Truck Number
                   </label>
-                  <select 
+                  <select
                     value={truckId}
                     name="truckId"
                     onBlur={() => handleBlur("truckId")}
@@ -135,15 +133,18 @@ export default function ScheduleCreateForm() {
                       !truckId && touched.truckId
                         ? "border-red-500"
                         : "border-gray-300"
-                    } focus:border-blue-500 focus:ring focus:ring-blue-200`}>
+                    } focus:border-blue-500 focus:ring focus:ring-blue-200`}
+                  >
                     {trucks.length > 0 ? (
-                        trucks
-                        .filter(truck => truck.availabilityStatus === true) 
+                      trucks
+                        .filter((truck) => truck.availabilityStatus === true)
                         .map((truck) => (
-                            <option key={truck._id} value={truck._id}>{truck.truckNumber}</option> 
+                          <option key={truck._id} value={truck._id}>
+                            {truck.truckNumber}
+                          </option>
                         ))
                     ) : (
-                        <option>No trucks available</option>
+                      <option>No trucks available</option>
                     )}
                   </select>
                   {/* <input
@@ -162,7 +163,7 @@ export default function ScheduleCreateForm() {
                   {!truckId && touched.truckId && (
                     <p className="text-red-600 text-sm mt-1">* Required</p>
                   )}*/}
-                </div> 
+                </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700">
@@ -199,18 +200,12 @@ export default function ScheduleCreateForm() {
                   onChange={handleChange}
                   placeholder="Enter driver contact number"
                   className={`mt-1 p-3 w-full rounded-md border ${
-                    touched.time &&
-                    (!time)
-                      ? "border-red-500"
-                      : "border-gray-300"
+                    touched.time && !time ? "border-red-500" : "border-gray-300"
                   } focus:border-blue-500 focus:ring focus:ring-blue-200`}
                 />
-                {touched.time &&
-                  (!time) && (
-                    <p className="text-red-600 text-sm mt-1">
-                      * Required
-                    </p>
-                  )}
+                {touched.time && !time && (
+                  <p className="text-red-600 text-sm mt-1">* Required</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -224,34 +219,20 @@ export default function ScheduleCreateForm() {
                   onChange={handleChange}
                   placeholder="Enter date"
                   className={`mt-1 p-3 w-full rounded-md border ${
-                    touched.date &&
-                    (!date)
-                      ? "border-red-500"
-                      : "border-gray-300"
+                    touched.date && !date ? "border-red-500" : "border-gray-300"
                   } focus:border-blue-500 focus:ring focus:ring-blue-200`}
                 />
-                {touched.date &&
-                  (!date) && (
-                    <p className="text-red-600 text-sm mt-1">
-                      * Required
-                    </p>
-                  )}
+                {touched.date && !date && (
+                  <p className="text-red-600 text-sm mt-1">* Required</p>
+                )}
               </div>
 
               <div className="flex justify-center">
                 <button
                   type="submit"
-                  disabled={
-                    !truckId ||
-                    !time ||
-                    !date ||
-                    !area
-                  }
+                  disabled={!truckId || !time || !date || !area}
                   className={`w-full py-3 px-4 font-semibold rounded-lg shadow-md text-white ${
-                    !truckId ||
-                    !time ||
-                    !date ||
-                    !area
+                    !truckId || !time || !date || !area
                       ? "bg-gray-300"
                       : "bg-[#48752c] hover:bg-[#2c471b]"
                   } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50`}

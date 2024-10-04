@@ -576,7 +576,7 @@ const UserProfile = () => {
                   alt="40%off"
                   className=" w-full h-auto rounded-xl"
                 />
-                {profile.ecoscore < 500 && (
+                {profile.ecoscore <= 500 && (
                   <div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
                     <img
                       width="50"
@@ -592,7 +592,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 500 && (
+                {profile.ecoscore >= 500 && (
                   <div
                     className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
@@ -613,7 +613,7 @@ const UserProfile = () => {
                   alt="50%off"
                   className=" w-full h-auto rounded-xl"
                 />
-                {profile.ecoscore < 1000 && (
+                {profile.ecoscore <= 1000 && (
                   <div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
                     <img
                       width="50"
@@ -629,7 +629,7 @@ const UserProfile = () => {
                 )}
               </div>
               <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore > 1000 && (
+                {profile.ecoscore >= 1000 && (
                   <div
                     className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{

@@ -1,5 +1,6 @@
 import Garbage from "../models/garbageModel.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
+import User from "../models/userModel.js";
 
 /**
  * @route   POST /api/garbage
@@ -21,6 +22,15 @@ const createGarbageRequest = asyncHandler(async (req, res) => {
     throw new Error("Please fill all required fields.");
   }
 
+  // Find the user
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    res.status(404);
+    throw new Error("User not found.");
+  }
+
+  // Create the garbage request
   const garbage = new Garbage({
     user: req.user._id,
     longitude,
@@ -31,6 +41,11 @@ const createGarbageRequest = asyncHandler(async (req, res) => {
   });
 
   const createdGarbage = await garbage.save();
+
+  // Update user's ecoscore
+  user.ecoscore = (user.ecoscore || 0) + 200; // Initialize ecoscore if it doesn't exist
+  await user.save();
+
   res.status(201).json(createdGarbage);
 });
 

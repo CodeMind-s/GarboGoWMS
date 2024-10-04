@@ -41,7 +41,7 @@ const updateGarbage = async (status, id) => {
       `garbage/${id}`, // Make sure this URL matches your API endpoint for garbage requests
       body
     );
-    console.log(updatedGarbage);
+    // console.log(updatedGarbage);
     return updatedGarbage;
   } catch (error) {
     console.error("Error updating garbage:", error.message);
@@ -52,7 +52,7 @@ const updateGarbage = async (status, id) => {
 const deleteGarbage = async (id) => {
   try {
     const deletedGarbage = await new API().delete(`garbage/${id}`);
-    console.log("deletedGarbage => ", deletedGarbage);
+    // console.log("deletedGarbage => ", deletedGarbage);
     return deletedGarbage.data;
   } catch (error) {
     console.error("Error deleting Inquiry:", error.message);

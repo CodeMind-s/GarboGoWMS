@@ -23,7 +23,7 @@ async function sendMessage(to, message) {
     });
 
     const responseData = await response.json(); // Assuming the API responds with JSON
-    console.log("Success:", responseData);
+    // console.log("Success:", responseData);
   } catch (error) {
     console.error("Error:", error);
   }

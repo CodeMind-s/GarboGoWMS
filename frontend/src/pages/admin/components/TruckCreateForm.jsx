@@ -47,7 +47,7 @@ export default function TruckCreateForm() {
     };
 
     try {
-      console.log(`newTruckEntry => `, newTruckEntry);
+      // console.log(`newTruckEntry => `, newTruckEntry);
       await createTruck(newTruckEntry);
 
       toast.success("Your truck entry has been submitted successfully!", {

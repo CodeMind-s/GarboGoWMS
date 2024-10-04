@@ -28,11 +28,11 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     ecoscore: {
-      type: String,
+      type: Number,
       required: true,
     },
     profileImage: {
-      type: String, 
+      type: String,
     },
     isAdmin: {
       type: Boolean,

@@ -40,7 +40,7 @@ const AdminInquiries = () => {
   }, []);
 
   const handleClickOpen = (id) => {
-    console.log(`id => `, id);
+    // console.log(`id => `, id);
     setSelectedInquiryId(id);
     setOpen(true);
   };
@@ -69,7 +69,7 @@ const AdminInquiries = () => {
         });
       } catch (error) {
         alert(error.message);
-        console.log("Error deleting garbage: ", error);
+        // console.log("Error deleting garbage: ", error);
       }
     }
   };

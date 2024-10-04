@@ -53,24 +53,34 @@ export default function Garbage_Add_Form() {
     };
 
     try {
-      console.log(`newGarbageEntry => `, newGarbageEntry);
+      // console.log(`newGarbageEntry => `, newGarbageEntry);
       await createGarbage(newGarbageEntry);
 
       toast.success("Garbage entry submitted successfully!", {
         position: "bottom-right",
-        autoClose: 2000,
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        theme: "light",
+        theme: "colored",
+      });
+      toast.info("You have obtained 200 Eco-Score!", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
       });
       setIsSubmit(true);
       setTimeout(() => {
         setIsOpen(false);
         window.location.reload();
-      }, 2000);
+      }, 5000);
     } catch (error) {
       console.error("Error submitting garbage entry:", error);
       toast.error("Failed to submit garbage entry. Please try again.");
@@ -136,9 +146,16 @@ export default function Garbage_Add_Form() {
                   <input
                     type="number"
                     value={mobileNumber}
+                    onChange={(e) => {
+                      const { value } = e.target;
+                      // Only update state if the input is 10 digits or less and is a number
+                      if (/^\d{0,10}$/.test(value)) {
+                        handleChange(e); // Call your existing handleChange
+                      }
+                    }}
                     name="mobileNumber"
                     onBlur={() => handleBlur("mobileNumber")}
-                    onChange={handleChange}
+                    // onChange={handleChange}
                     placeholder="Enter mobile number"
                     className={`mt-1 p-3 w-full rounded-md border ${
                       touched.mobileNumber &&

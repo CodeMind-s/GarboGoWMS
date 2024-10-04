@@ -161,7 +161,7 @@ export default function Map(props) {
     <div className="relative">
       <div
         id="map"
-        className=" rounded-xl border-gray-200 h-[100vh] md:h-[275px]"
+        className=" rounded-xl border-gray-200 h-[100vh] md:h-[530px]"
         style={{ width: "100%" }}
       ></div>
       <div className="bg-white bg-opacity-90 z-[1000] absolute rounded-xl top-0 right-0 flex flex-col md:flex-row">

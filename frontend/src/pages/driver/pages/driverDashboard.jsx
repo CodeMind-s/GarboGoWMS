@@ -61,11 +61,11 @@ function DriverDashboard() {
 
       {/* body */}
       <div className=" flex-grow">
-      <div className=" flex justify-center mt-3">
+      <div className=" flex justify-center ">
       </div>
       <div className="">
         {isSchedules && (<div>
-          <h1 className=" w-full pl-4 text-left text-[20px] font-bold text-[#48752c]">Driver Dashboard</h1>
+          <h1 className=" w-full pl-4 text-left text-[20px] font-bold text-[#48752c] mt-3">Driver Dashboard</h1>
           {trucks.map((schedule) => {
             if (schedule.status != 'Completed') {
               return (

@@ -56,7 +56,7 @@ export default function Garbage_Add_Form() {
       console.log(`newGarbageEntry => `, newGarbageEntry);
       await createGarbage(newGarbageEntry);
 
-      toast.success("Your garbage entry has been submitted successfully!", {
+      toast.success("Garbage entry submitted successfully!", {
         position: "bottom-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -110,7 +110,7 @@ export default function Garbage_Add_Form() {
         onClick={handleOpenModal}
         className="px-4 py-2 bg-green-800 text-white rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
       >
-        Open Garbage Request Form
+        Make Garbage Request
       </button>
 
       {isOpen && (

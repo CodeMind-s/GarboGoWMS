@@ -36,4 +36,22 @@ const deleteTruck = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Truck deleted successfully" });
 });
 
-export { createTruck, getAllTrucks, updateTruck, deleteTruck };
+// Get truck by driverName and truckNumber
+const getTruckByDriverAndNumber = asyncHandler(async (req, res) => {
+  // console.log(`req.query => `, req);
+  const { driverName, truckNumber } = req.body;
+  const truck = await Truck.findOne({ driverName, truckNumber });
+  if (!truck) {
+    res.status(404);
+    throw new Error("Truck not found");
+  }
+  res.status(200).json(truck);
+});
+
+export {
+  createTruck,
+  getAllTrucks,
+  updateTruck,
+  deleteTruck,
+  getTruckByDriverAndNumber,
+};

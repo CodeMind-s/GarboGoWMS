@@ -8,6 +8,11 @@ import phone from "../../../assets/icons/phone.png";
 import address from "../../../assets/icons/location.png";
 import dropdown from "../../../assets/icons/dropdown.png";
 
+import Off40 from "../../../assets/vouchers/40off.png"
+import Off50 from "../../../assets/vouchers/50off.png"
+import Off60 from "../../../assets/vouchers/60off.png"
+import Off70 from "../../../assets/vouchers/70off.png"
+
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
@@ -272,6 +277,64 @@ const UserProfile = () => {
                 {profile.ecoscore}
               </h1>
               <h1 className="text-[18px] ">Eco Score Points</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className=" w-[95%] mx-auto ">
+        <h1 className=" text-[#48752c] text-xl font-semibold">Redeem Vouchers</h1>
+        <div className=" w-full">
+          <div className=" flex justify-between items-center mt-5">
+            <div className=" w-[48%] flex justify-start">
+              <div className=" w-[90%] relative">
+                <img src={Off40} alt='40%off' className=" w-full h-auto rounded-xl"/>
+                {profile.ecoscore < 500 && (<div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <img width="50" height="50" src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png" alt="external-lock-call-to-action-bearicons-glyph-bearicons"/>
+                  <span className=" text-[#f9da78] text-sm mt-2">You need only {500 - profile.ecoscore} ECO points to unlock Voucher</span>
+                </div>)}
+              </div>
+              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+                {profile.ecoscore > 500 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
+              </div>
+            </div>
+            
+            <div className=" w-[48%] flex justify-start">
+              <div className=" w-[90%] relative">
+                <img src={Off50} alt='50%off' className=" w-full h-auto rounded-xl"/>
+                {profile.ecoscore < 1000 && (<div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <img width="50" height="50" src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png" alt="external-lock-call-to-action-bearicons-glyph-bearicons"/>
+                  <span className=" text-[#f9da78] text-sm mt-2">You need only {1000 - profile.ecoscore} ECO points to unlock Voucher</span>
+                </div>)}
+              </div>
+              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+                {profile.ecoscore > 1000 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
+              </div>
+            </div>
+          </div>
+          <div className=" flex justify-between items-center mt-5">
+            <div className=" w-[48%] flex justify-start">
+              <div className=" w-[90%] relative">
+                <img src={Off60} alt='60%off' className=" w-full h-auto rounded-xl"/>
+                {profile.ecoscore < 1500 && (<div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <img width="50" height="50" src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png" alt="external-lock-call-to-action-bearicons-glyph-bearicons"/>
+                  <span className=" text-[#f9da78] text-sm mt-2">You need only {1500 - profile.ecoscore} ECO points to unlock Voucher</span>
+                </div>)}
+              </div>
+              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+                {profile.ecoscore > 1500 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
+              </div>
+            </div>
+            <div className=" w-[48%] flex justify-start">
+              <div className=" w-[90%] relative">
+                <img src={Off70} alt='70%off' className=" w-full h-auto rounded-xl"/>
+                {profile.ecoscore < 2000 && (<div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <img width="50" height="50" src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png" alt="external-lock-call-to-action-bearicons-glyph-bearicons"/>
+                  <span className=" text-[#f9da78] text-sm mt-2">You need only {2000 - profile.ecoscore} ECO points to unlock Voucher</span>
+                </div>)}
+              </div>
+              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+                {profile.ecoscore > 2000 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
+              </div>
             </div>
           </div>
         </div>

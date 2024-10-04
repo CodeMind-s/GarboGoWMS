@@ -19,6 +19,7 @@ export default function Map() {
   const [filteredGarbages, setFilteredGarbages] = useState(garbages);
   const [isClicked, setIsClicked] = useState("All");
 
+
   const fetchAllGarbages = async () => {
     try {
       const res = await getAllGarbages();

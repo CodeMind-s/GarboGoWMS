@@ -21,6 +21,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import MapIcon from '@mui/icons-material/Map';
 
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -100,6 +101,11 @@ function UserDrawer({ children }) {
             icon: <DeleteSweepIcon sx={iconStyle} />,
             text: "Garbage Requests",
             link: "/user/my-garbage",
+          },
+          {
+            icon: <MapIcon sx={iconStyle} />,
+            text: "Neighborhood Map",
+            link: "/user/garbage-map",
           },
           {
             icon: <SupportAgentIcon sx={iconStyle} />,

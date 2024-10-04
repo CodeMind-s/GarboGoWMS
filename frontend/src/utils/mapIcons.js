@@ -3,7 +3,7 @@ import L from 'leaflet';
 const truck = L.icon({
     iconUrl: 'https://img.icons8.com/glyph-neue/64/1A1A1A/garbage-truck.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    iconSize: [40, 40],
+    iconSize: [20, 20],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
@@ -56,7 +56,7 @@ const truck = L.icon({
 
   const userLocationIcon = L.divIcon({
     className: 'flex items-center justify-center w-10 h-10',
-    iconSize: [41, 41],
+    iconSize: [21, 21],
     html: `<div class="relative w-4 h-4 bg-[#008000] rounded-full border-2 border-[#FFFFFF]">
              <div class="absolute top-0 left-0 w-full h-full border-4 border-[#008000]/30 rounded-full" style="transform: scale(2.5);">
            </div>`

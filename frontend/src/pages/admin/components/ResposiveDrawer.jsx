@@ -21,6 +21,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 
@@ -93,6 +94,11 @@ function ResponsiveDrawer({ children }) {
             icon: <LocalShippingIcon sx={iconStyle} />,
             text: "Truck",
             link: "/admin/trucks",
+          },
+          {
+            icon: <EventAvailableIcon sx={iconStyle} />,
+            text: "Schedule",
+            link: "/admin/schedule",
           },
           {
             icon: <SupportAgentIcon sx={iconStyle} />,

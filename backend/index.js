@@ -11,6 +11,7 @@ import userRoutes from "./routes/userRoutes.js";
 import garbageRoutes from "./routes/garbageRoutes.js"; // fixed typo in garbageRoutes
 import inquiryRoutes from "./routes/inquiryRoutes.js";
 import truckRoutes from "./routes/truckRoutes.js"; // Import truckRoutes
+import scheduleRoutes from "./routes/scheduleRoutes.js";
 
 dotenv.config();
 const port = process.env.PORT || 5000;
@@ -46,6 +47,10 @@ app.use("/api/garbage", garbageRoutes);
 // Inquiry Route
 app.use("/api/inquiries", inquiryRoutes);
 
+// Truck Route
 app.use("/api/truck", truckRoutes);
+
+// Schedule Route
+app.use("/api/schedule", scheduleRoutes);
 
 app.listen(port, () => console.log(`Server running on port: ${port}`));

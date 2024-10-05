@@ -21,6 +21,17 @@ const getAllGarbages = async () => {
   }
 };
 
+const getAllDriverGarbages = async () => {
+  try {
+    const garbages = await new API().get("garbage/driver-garbage", {});
+    // console.log("garbagesINjs => ", garbages);
+    return garbages;
+  } catch (error) {
+    console.error("Error fetching garbages:", error.message);
+    throw error; // Rethrow the error for the component to handle
+  }
+};
+
 const getUserAllGarbages = async () => {
   try {
     const garbages = await new API().get("garbage/garbage-requests", {});
@@ -64,6 +75,7 @@ export {
   createGarbage,
   getAllGarbages,
   getUserAllGarbages,
+  getAllDriverGarbages,
   updateGarbage,
   deleteGarbage,
 };

@@ -2,7 +2,8 @@ import axios from "axios";
 
 class ApiHelper {
   constructor() {
-    this.baseUrl = "http://192.168.143.146:5000/api";
+    // this.baseUrl = "http://192.168.143.146:5000/api";
+    this.baseUrl = "http://localhost:5000/api";
   }
 
   // General GET request

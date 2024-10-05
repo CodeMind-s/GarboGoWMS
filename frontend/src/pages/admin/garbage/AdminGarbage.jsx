@@ -305,7 +305,7 @@ const AdminGarbage = () => {
               <th scope="col" className="px-5 py-3">
                 Phone Number
               </th>
-              <th scope="col" className="px-5 py-3">
+              <th scope="col" className="px-3 py-3">
                 Type
               </th>
               <th scope="col" className="px-5 py-3">
@@ -347,7 +347,7 @@ const AdminGarbage = () => {
                         : "No user assigned"}
                     </th>
                     <td className="px-5 py-4">{garbage.mobileNumber}</td>
-                    <td className="px-5 py-4 capitalize">
+                    <td className="px-3 py-4 capitalize">
                       <span
                         className={`uppercase font-semibold text-[12px] px-2.5 py-0.5 rounded ${getTypeClassName(
                           garbage.typeOfGarbage

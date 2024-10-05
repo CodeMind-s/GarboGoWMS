@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAllGarbages } from "../../../api/garbageApi";
+import { getAllDriverGarbages } from "../../../api/garbageApi";
 import {
   truck,
   redIcon,
@@ -11,7 +11,14 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-color-markers";
-import { Kaduwela, Koswatta, Kothalawala, Malabe, NoTown, Rajagiriya } from "../../../utils/townCodes";
+import {
+  Kaduwela,
+  Koswatta,
+  Kothalawala,
+  Malabe,
+  NoTown,
+  Rajagiriya,
+} from "../../../utils/townCodes";
 
 export default function Map(props) {
   const [lat, setLat] = useState(6.911967);
@@ -20,10 +27,9 @@ export default function Map(props) {
   const [filteredGarbages, setFilteredGarbages] = useState(garbages);
   const [isClicked, setIsClicked] = useState("All");
 
-
   const fetchAllGarbages = async () => {
     try {
-      const res = await getAllGarbages();
+      const res = await getAllDriverGarbages();
       setGarbages(res);
     } catch (error) {
       alert(error.message);
@@ -117,27 +123,27 @@ export default function Map(props) {
   };
 
   const drawPolygonForTown = (area, mymap) => {
-    let town ;
-    if(area == "Koswatte"){
+    let town;
+    if (area == "Koswatte") {
       town = Koswatta;
-    }
-    else if(area == "Kothalawala"){
+    } else if (area == "Kothalawala") {
       town = Kothalawala;
-    }
-    else if(area == "Kaduwela"){
+    } else if (area == "Kaduwela") {
       town = Kaduwela;
-    }
-    else if(area == "Rajagiriya"){
+    } else if (area == "Rajagiriya") {
       town = Rajagiriya;
-    }
-    else if(area == "Malabe"){
+    } else if (area == "Malabe") {
       town = Malabe;
-    }
-    else{
+    } else {
       town = NoTown;
     }
-    const polygon = L.polygon(town, { color: 'blue', fillOpacity: 0.3,  weight: 3, opacity: 0.7, }).addTo(mymap);
-    mymap.fitBounds(polygon.getBounds()); 
+    const polygon = L.polygon(town, {
+      color: "blue",
+      fillOpacity: 0.3,
+      weight: 3,
+      opacity: 0.7,
+    }).addTo(mymap);
+    mymap.fitBounds(polygon.getBounds());
   };
 
   const filter = (type) => {
@@ -151,8 +157,6 @@ export default function Map(props) {
     setIsClicked(type);
   };
 
-  
-
   useEffect(() => {
     filter("All");
   }, [garbages]);
@@ -161,10 +165,10 @@ export default function Map(props) {
     <div className="relative">
       <div
         id="map"
-        className=" rounded-xl border-gray-200 h-[100vh] md:h-[530px]"
-        style={{ width: "100%" }}
+        className=" rounded-xl border-gray-200 h-[600px]"
+        // style={{ width: "100%" }}
       ></div>
-      <div className="bg-white bg-opacity-90 z-[1000] absolute rounded-xl top-0 right-0 flex flex-col md:flex-row">
+      {/* <div className="bg-white bg-opacity-90 z-[1000] absolute rounded-xl top-0 right-0 flex flex-col md:flex-row">
         <div
           className={` px-4 rounded-xl py-2 h-full bg-opacity-40 ${
             isClicked === "All" ? "bg-[#48752c]" : ""
@@ -219,8 +223,7 @@ export default function Map(props) {
           <div className=" inline-block w-[10px] h-[10px] rounded-full bg-[#f44336] mr-2"></div>
           <span className=" cursor-pointer mr-8">Hazardous</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
-

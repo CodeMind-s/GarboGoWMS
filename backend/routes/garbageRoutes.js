@@ -16,6 +16,7 @@ router
   .post(authenticate, createGarbageRequest)
   .get(authenticate, authorizeAdmin, getAllGarbageRequests);
 
+router.route("/driver-garbage").get(getAllGarbageRequests);
 router.route("/garbage-requests").get(authenticate, getUserGarbageRequests);
 
 router

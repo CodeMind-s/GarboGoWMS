@@ -35,7 +35,7 @@ const getAllSchedules = async () => {
 const updateSchedule = async (data, id) => {
   try {
     const updatedSchedule = await new API().put(`schedule/${id}`, data); // Sending 'data' directly
-    console.log(updatedSchedule);
+    // console.log(updatedSchedule);
     return updatedSchedule;
   } catch (error) {
     console.error("Error updating Schedule:", error.message);
@@ -47,7 +47,7 @@ const deleteSchedule = async (id) => {
   // Delete a truck
   try {
     const deletedSchedule = await new API().delete(`schedule/${id}`);
-    console.log("deletedSchedule => ", deletedSchedule);
+    // console.log("deletedSchedule => ", deletedSchedule);
     return deletedSchedule.data;
   } catch (error) {
     console.error("Error deleting Schedule:", error.message);

@@ -20,6 +20,10 @@ const garbageSchema = mongoose.Schema(
       required: true,
       enum: ["Organic", "Recyclable", "Non-Recyclable", "Hazardous", "E-Waste"],
     },
+    area: {
+      type: String,
+      required: true,
+    },
     address: {
       type: String,
       required: true,

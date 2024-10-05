@@ -62,7 +62,7 @@ const updateInquiry = async (id, status) => {
     const updatedData = { status };
 
     // Send a PUT request to update only the status of the inquiry
-    console.log(updatedData);
+    // console.log(updatedData);
     const updatedInquiry = await new API().put(`inquiries/${id}`, updatedData);
 
     return updatedInquiry;

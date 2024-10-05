@@ -32,7 +32,7 @@ const userSchema = mongoose.Schema(
       required: true,
     },
     profileImage: {
-      type: String, 
+      type: String,
     },
     isAdmin: {
       type: Boolean,

@@ -21,12 +21,13 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import DeleteSweepIcon from "@mui/icons-material/DeleteSweep";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
-import EventAvailableIcon from '@mui/icons-material/EventAvailable';
+import EventAvailableIcon from "@mui/icons-material/EventAvailable";
 import GroupIcon from "@mui/icons-material/Group";
 import LogoutIcon from "@mui/icons-material/Logout";
 
 // Custom Components
 import logo from "../../../assets/GarboGo.png";
+import { toast, ToastContainer } from "react-toastify";
 
 const drawerWidth = 240;
 const iconStyle = { fontSize: 20, color: "#777777" };
@@ -57,9 +58,18 @@ function ResponsiveDrawer({ children }) {
   const handleLogout = async () => {
     try {
       const response = await AuthService.logoutCurrentUser();
-      console.log("Logout status: ", response);
+      // console.log("Logout status: ", response);
+
+      toast.success("Logged out successfully!", {
+        position: "bottom-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        theme: "colored",
+      });
       // Redirect to dashboard or home page
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
     } catch (error) {
       setError(error.message);
     }
@@ -113,7 +123,7 @@ function ResponsiveDrawer({ children }) {
         ].map((item) => (
           <ListItem
             key={item.text}
-            disablePadding
+            // disablePadding
             onClick={() => {
               if (item.isLogout) {
                 handleLogout(); // Call the logout method
@@ -203,6 +213,7 @@ function ResponsiveDrawer({ children }) {
         <Toolbar />
         <div className="usr-drawer-content">{children}</div>
       </Box>
+      <ToastContainer />
     </Box>
   );
 }

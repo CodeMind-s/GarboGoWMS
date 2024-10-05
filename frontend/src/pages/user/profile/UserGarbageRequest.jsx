@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  deleteGarbage,
-  getAllGarbages,
-  getUserAllGarbages,
-} from "../../../api/garbageApi";
-import EditIcon from "@mui/icons-material/Edit";
+import { deleteGarbage, getUserAllGarbages } from "../../../api/garbageApi";
+// import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ToastContainer, toast } from "react-toastify";
@@ -18,12 +14,13 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import UserDrawer from "../components/UserDrawer";
 import Garbage_Add_Form from "../components/Garbage_Add_Form";
+import { set } from "mongoose";
 
 const UserGarbageRequest = () => {
   const [garbages, setGarbages] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [selectedGarbageId, setSelectedGarbageId] = useState(null);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const fetchAllGarbages = async () => {
     try {
@@ -51,7 +48,7 @@ const UserGarbageRequest = () => {
   }, []);
 
   const handleClickOpen = (id) => {
-    console.log(`id => `, id);
+    // console.log(`id => `, id);
     setSelectedGarbageId(id);
     setOpen(true);
   };
@@ -64,23 +61,38 @@ const UserGarbageRequest = () => {
     if (selectedGarbageId) {
       try {
         await deleteGarbage(selectedGarbageId);
-        setGarbages((currentGarbage) =>
-          currentGarbage.filter((garbage) => garbage._id !== selectedGarbageId)
-        );
+
+        // Refresh the garbage list after successful deletion
+        const updatedGarbages = await getUserAllGarbages();
+        setGarbages(updatedGarbages);
+
         handleClose();
-        toast.success("Garbage request deleted successfully!", {
+        toast.success("Garbage Request Deleted Successfully!", {
           position: "bottom-right",
-          autoClose: 2000,
+          autoClose: 3000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
           progress: undefined,
-          theme: "light",
+          theme: "colored",
         });
+        setTimeout(() => {
+          // setIsOpen(false);  // This line is not needed
+          window.location.reload(); // This line is not needed
+        }, 3000);
       } catch (error) {
-        alert(error.message);
-        console.log("Error deleting garbage: ", error);
+        console.error("Error deleting garbage: ", error);
+        toast.error("Failed to delete garbage request. Please try again.", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       }
     }
   };

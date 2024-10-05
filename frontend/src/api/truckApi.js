@@ -24,7 +24,7 @@ const getAllTrucks = async () => {
 const updateTruck = async (data, id) => {
   try {
     const updatedTruck = await new API().put(`truck/${id}`, data); // Sending 'data' directly
-    console.log(updatedTruck);
+    // console.log(updatedTruck);
     return updatedTruck;
   } catch (error) {
     console.error("Error updating truck:", error.message);
@@ -36,7 +36,7 @@ const deleteTruck = async (id) => {
   // Delete a truck
   try {
     const deletedTruck = await new API().delete(`truck/${id}`);
-    console.log("deletedTruck => ", deletedTruck);
+    // console.log("deletedTruck => ", deletedTruck);
     return deletedTruck.data;
   } catch (error) {
     console.error("Error deleting truck:", error.message);

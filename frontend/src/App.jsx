@@ -37,7 +37,6 @@ function App() {
           <Route exact path="/user/my-inquiry" Component={UserInquiryRequest} />
           <Route exact path="/user/profile" Component={Profile} />
 
-          {/* Truck Route */}
           {/* Driver Route */}
           <Route exact path="/driver-login" Component={TruckAuth} />
           <Route exact path="/driver" Component={DriverDashboard} />

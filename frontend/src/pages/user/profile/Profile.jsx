@@ -14,14 +14,17 @@ import Off40 from "../../../assets/vouchers/40off.png";
 import Off50 from "../../../assets/vouchers/50off.png";
 import Off60 from "../../../assets/vouchers/60off.png";
 import Off70 from "../../../assets/vouchers/70off.png";
+import { Navigate, useNavigate } from "react-router";
 
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const nav = useNavigate();
   const [imageSelected, setImageSelected] = useState("");
 
-  const [isToggleDropdownforInformation, setToggleDropdownforInformation] = useState(false);
+  const [isToggleDropdownforInformation, setToggleDropdownforInformation] =
+    useState(false);
   const [updateProfile, setUpdateProfile] = useState({
     username: "",
     email: "",
@@ -132,6 +135,77 @@ const UserProfile = () => {
     }
   };
 
+  const handleCollect = async (threshold) => {
+    try {
+      // Parse the ecoscore as a number
+      let currentEcoscore = parseInt(profile.ecoscore, 10);
+
+      // Check if the ecoscore is above the threshold to allow collection
+      if (currentEcoscore >= threshold) {
+        currentEcoscore -= threshold;
+
+        // Prepare the updated profile with the new ecoscore
+        const updatedProfileData = {
+          ...profile,
+          ecoscore: currentEcoscore.toString(), // Update ecoscore
+        };
+
+        // Send a request to the backend to update the profile with the new ecoscore
+        await AuthService.updateUser(updatedProfileData);
+
+        // Update the local state to reflect the new ecoscore
+        setProfile((prevProfile) => ({
+          ...prevProfile,
+          ecoscore: updatedProfileData.ecoscore,
+        }));
+
+        // Notify the user that the voucher was successfully collected
+        toast.success("Voucher collected!", {
+          position: "bottom-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+        setTimeout(() => {
+          window.location.reload();
+          // nav("/user/profile");
+        }, 2000);
+        // console.log(
+        //   "Ecoscore successfully updated:",
+        //   updatedProfileData.ecoscore
+        // );
+      } else {
+        console.log("Not enough ECO points to collect this voucher.");
+        toast.error("Not enough ECO points to collect this voucher.", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      }
+    } catch (error) {
+      console.error("Error updating ecoscore:", error);
+      toast.error("Failed to collect voucher. Please try again.", {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  };
+
   return (
     <UserDrawer>
       <div className="flex flex-col items-center justify-center ">
@@ -179,9 +253,10 @@ const UserProfile = () => {
               </div>
             </div>
             <div className="relative flex flex-col items-end justify-end w-[30%]">
-              <div 
-              onClick={toggleDropdownforInformation}
-              className="absolute top-0 right-0 bg-gray-300 hover:bg-[#f9da78] w-[50px] shadow-xl h-[50px] flex items-center justify-center rounded-full mb-2">
+              <div
+                onClick={toggleDropdownforInformation}
+                className="absolute top-0 right-0 bg-gray-300 hover:bg-[#f9da78] w-[50px] shadow-xl h-[50px] flex items-center justify-center rounded-full mb-2"
+              >
                 <img
                   src={editprofile}
                   alt="edit"
@@ -325,42 +400,44 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
-      <div className=" w-[95%] mx-auto ">
-        <h1 className=" text-[#48752c] text-xl font-semibold">
+      <div className="w-[95%] mx-auto">
+        <h1 className="text-[#48752c] text-xl font-semibold">
           Redeem Vouchers
         </h1>
-        <div className=" w-full">
-          <div className=" flex justify-between items-center mt-5">
-            <div className=" w-[48%] flex justify-start">
-              <div className=" w-[90%] relative">
+        <div className="w-full">
+          {/* Voucher 1 - 40% Off */}
+          <div className="flex justify-between items-center mt-5">
+            <div className="w-[48%] flex justify-start">
+              <div className="w-[90%] relative">
                 <img
                   src={Off40}
                   alt="40%off"
-                  className=" w-full h-auto rounded-xl"
+                  className="w-full h-auto rounded-xl"
                 />
                 {profile.ecoscore <= 500 && (
-                  <div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <div className="bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
                     <img
                       width="50"
                       height="50"
                       src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png"
                       alt="external-lock-call-to-action-bearicons-glyph-bearicons"
                     />
-                    <span className=" text-[#f9da78] text-sm mt-2">
+                    <span className="text-[#f9da78] text-sm mt-2">
                       You need only {500 - profile.ecoscore} ECO points to
                       unlock Voucher
                     </span>
                   </div>
                 )}
               </div>
-              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+              <div className="h-full bg-opacity-70 flex justify-center items-center">
                 {profile.ecoscore >= 500 && (
                   <div
-                    className=" py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    className="py-1 cursor-pointer px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "upright",
                     }}
+                    onClick={() => handleCollect(500)}
                   >
                     COLLECT
                   </div>
@@ -368,36 +445,38 @@ const UserProfile = () => {
               </div>
             </div>
 
-            <div className=" w-[48%] flex justify-start">
-              <div className=" w-[90%] relative">
+            {/* Voucher 2 - 50% Off */}
+            <div className="w-[48%] flex justify-start">
+              <div className="w-[90%] relative">
                 <img
                   src={Off50}
                   alt="50%off"
-                  className=" w-full h-auto rounded-xl"
+                  className="w-full h-auto rounded-xl"
                 />
                 {profile.ecoscore <= 1000 && (
-                  <div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <div className="bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
                     <img
                       width="50"
                       height="50"
                       src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png"
                       alt="external-lock-call-to-action-bearicons-glyph-bearicons"
                     />
-                    <span className=" text-[#f9da78] text-sm mt-2">
+                    <span className="text-[#f9da78] text-sm mt-2">
                       You need only {1000 - profile.ecoscore} ECO points to
                       unlock Voucher
                     </span>
                   </div>
                 )}
               </div>
-              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+              <div className="h-full bg-opacity-70 flex justify-center items-center">
                 {profile.ecoscore >= 1000 && (
                   <div
-                    className=" py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    className="py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "upright",
                     }}
+                    onClick={() => handleCollect(1000)}
                   >
                     COLLECT
                   </div>
@@ -405,67 +484,83 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-          <div className=" flex justify-between items-center mt-5">
-            <div className=" w-[48%] flex justify-start">
-              <div className=" w-[90%] relative">
+
+          {/* Voucher 3 - 60% Off */}
+          <div className="flex justify-between items-center mt-5">
+            <div className="w-[48%] flex justify-start">
+              <div className="w-[90%] relative">
                 <img
                   src={Off60}
                   alt="60%off"
-                  className=" w-full h-auto rounded-xl"
+                  className="w-full h-auto rounded-xl"
                 />
                 {profile.ecoscore < 1500 && (
-                  <div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <div className="bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
                     <img
                       width="50"
                       height="50"
                       src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png"
                       alt="external-lock-call-to-action-bearicons-glyph-bearicons"
                     />
-                    <span className=" text-[#f9da78] text-sm mt-2">
+                    <span className="text-[#f9da78] text-sm mt-2">
                       You need only {1500 - profile.ecoscore} ECO points to
                       unlock Voucher
                     </span>
                   </div>
                 )}
               </div>
-              <div className=" h-full bg-opacity-70 flex justify-center items-center">
+              <div className="h-full bg-opacity-70 flex justify-center items-center">
                 {profile.ecoscore >= 1500 && (
                   <div
-                    className=" py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    className="py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
                     style={{
                       writingMode: "vertical-rl",
                       textOrientation: "upright",
                     }}
+                    onClick={() => handleCollect(1500)}
                   >
                     COLLECT
                   </div>
                 )}
               </div>
             </div>
-            <div className=" w-[48%] flex justify-start">
-              <div className=" w-[90%] relative">
+
+            {/* Voucher 4 - 70% Off */}
+            <div className="w-[48%] flex justify-start">
+              <div className="w-[90%] relative">
                 <img
                   src={Off70}
                   alt="70%off"
-                  className=" w-full h-auto rounded-xl"
+                  className="w-full h-auto rounded-xl"
                 />
                 {profile.ecoscore < 2000 && (
-                  <div className=" bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
+                  <div className="bg-black rounded-xl bg-opacity-70 absolute top-0 left-0 w-full h-full flex justify-center items-center flex-col">
                     <img
                       width="50"
                       height="50"
                       src="https://img.icons8.com/external-bearicons-glyph-bearicons/64/f9da78/external-lock-call-to-action-bearicons-glyph-bearicons.png"
                       alt="external-lock-call-to-action-bearicons-glyph-bearicons"
                     />
-                    <span className=" text-[#f9da78] text-sm mt-2">
+                    <span className="text-[#f9da78] text-sm mt-2">
                       You need only {2000 - profile.ecoscore} ECO points to
                       unlock Voucher
                     </span>
                   </div>
                 )}
               </div>
-              <div className=" h-full bg-opacity-70 flex justify-center items-center">
-                {profile.ecoscore >= 2000 && (<div className=" py-5 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold" style={{ writingMode: "vertical-rl", textOrientation: "upright" }}>COLLECT</div>)}
+              <div className="h-full bg-opacity-70 flex justify-center items-center">
+                {profile.ecoscore >= 2000 && (
+                  <div
+                    className="py-1 px-2 border-[3px] border-[#DF5900] bg-white rounded-lg text-[#DF5900] font-semibold"
+                    style={{
+                      writingMode: "vertical-rl",
+                      textOrientation: "upright",
+                    }}
+                    onClick={() => handleCollect(2000)}
+                  >
+                    COLLECT
+                  </div>
+                )}
               </div>
             </div>
           </div>

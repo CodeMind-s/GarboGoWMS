@@ -192,6 +192,7 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
     user.address = req.body.address || user.address;
     user.contact = req.body.contact || user.contact;
     user.profileImage = req.body.profileImage || user.profileImage;
+    user.ecoscore = req.body.ecoscore || user.ecoscore;
     
     let passwordChanged = false;
 

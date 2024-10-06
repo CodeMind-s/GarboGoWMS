@@ -20,6 +20,15 @@ const AdminUsers = () => {
   const [open, setOpen] = React.useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [loader, setLoader] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredUsers = users.filter((user) =>
+    user.username.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleClickOpen = (id) => {
     console.log(`id => `, id);
@@ -79,19 +88,18 @@ const AdminUsers = () => {
       console.log("No users available");
       return null;
     }
-  
+
     const highestEcoUser = users.reduce((prev, current) => {
       // Convert eco scores from string to number
       const prevEcoScore = parseFloat(prev.ecoscore) || 0;
       const currentEcoScore = parseFloat(current.ecoscore) || 0;
-  
+
       return prevEcoScore > currentEcoScore ? prev : current;
     });
-  
+
     console.log("User with the highest eco score:", highestEcoUser);
     return highestEcoUser;
   };
-  
 
   const calculateMaleFemaleRatio = () => {
     if (users.length === 0) return { male: 0, female: 0 };
@@ -113,29 +121,29 @@ const AdminUsers = () => {
     const doc = new jsPDF();
     const imgLogo = new Image();
     imgLogo.src = "../src/assets/GarboGo.png";
-  
+
     console.log("Image path: ", imgLogo.src);
     imgLogo.onload = () => {
       //Header
       doc.addImage(imgLogo, "PNG", 14, 10, 55, 15);
-  
+
       doc.setFont("helvetica", "bold");
       doc.setTextColor("48752c");
       doc.setFontSize(16);
       doc.text("GarboGo Waste Management System", 95, 18);
-  
+
       // Title
       doc.setFont("helvetica", "normal");
       doc.setTextColor("000000");
       doc.setFontSize(18);
       doc.text("User Management Report", 14, 40);
-  
+
       doc.setFontSize(11);
       doc.setTextColor(100);
-  
+
       // Date and Time of Report Generation
       doc.text(`Generated Date: ${new Date().toLocaleString()}`, 14, 48);
-  
+
       // Table for Garbage Collection Summary
       autoTable(doc, {
         startY: 58,
@@ -143,13 +151,12 @@ const AdminUsers = () => {
         body: [
           ["Total Accounts Registered", userData.totalUsers],
           ["Highest Eco Score Membership by", userData.highestEcoScore],
-          ["Ratio of Male Memberships",userData.malemembers+"%"],
-          ["Ratio of Female Memberships",userData.femalemembers+"%"],
-
+          ["Ratio of Male Memberships", userData.malemembers + "%"],
+          ["Ratio of Female Memberships", userData.femalemembers + "%"],
         ],
         theme: "grid",
       });
-  
+
       // Footer
       const pageCount = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
@@ -167,7 +174,7 @@ const AdminUsers = () => {
           doc.internal.pageSize.getHeight() - 10 // Positioned at the bottom
         );
       }
-  
+
       // Save the PDF
       const generatedDate = new Date().toLocaleDateString().replace(/\//g, "-");
       doc.save(`User_Management_Report_${generatedDate}.pdf`);
@@ -183,7 +190,6 @@ const AdminUsers = () => {
       });
     };
   };
-  
 
   return (
     <ResponsiveDrawer>
@@ -219,6 +225,7 @@ const AdminUsers = () => {
             </div>
           </div>
         </div>
+
         <div
           className="bg-[#48752c] cursor-pointer shadow-xl text-white hover:text-[#f9da78] rounded w-[24%] p-4 flex flex-col justify-center"
           onClick={() =>
@@ -227,12 +234,21 @@ const AdminUsers = () => {
               highestEcoScore: calculateHighestEcoScore()?.username,
               malemembers: calculateMaleFemaleRatio().male,
               femalemembers: calculateMaleFemaleRatio().female,
-
             })
           }
         >
           <h1> Click to Download User Management Report</h1>
         </div>
+      </div>
+      {/* Add search input field */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search by username"
+          value={searchTerm}
+          onChange={handleSearchChange}
+          className="p-2 border border-gray-300 rounded w-full"
+        />
       </div>
       <table className="w-full shadow-xl text-sm text-left rtl:text-right text-gray-500 :text-gray-400">
         <caption className="p-5 shadow-xl  text-lg font-semibold text-left rtl:text-right text-[#48752c]  bg-gray-50 :text-white :bg-gray-800">
@@ -244,9 +260,6 @@ const AdminUsers = () => {
             <th scope="col" className="px-4 py-3 ">
               Username
             </th>
-            {/* <th scope="col" className="px-6 py-3">
-                Email
-              </th> */}
             <th scope="col" className="px-4 py-3">
               Email
             </th>
@@ -266,63 +279,42 @@ const AdminUsers = () => {
           </tr>
         </thead>
         <tbody className="text-center shadow-xl ">
-          {users.length > 0 ? (
-            users.map((user) => (
-              <tr
-                className="bg-white border-b :bg-gray-800 :border-gray-700 "
-                key={user._id}
-              >
-                <td className="w-full  px-3">
-                  <img
-                    src={user?.profileImage || userimage}
-                    alt="Profile Picture"
-                    className="w-[30px] h-[30px] rounded-full"
-                  />
-                </td>
-                <th
-                  scope="row"
-                  className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
+          {filteredUsers.length > 0 ? (
+            filteredUsers
+              .filter((user) => user.email !== "admin@gmail.com")
+              .map((user) => (
+                <tr
+                  className="bg-white border-b :bg-gray-800 :border-gray-700 "
+                  key={user._id}
                 >
-                  {user.username}
-                </th>
-                <td className="px-4 py-4">{user.email}</td>
-                <td className="px-4 py-4">{user.gender}</td>
-                <td className="px-4 py-4">{user.ecoscore}</td>
-                <td className="px-4 py-4">{user.address}</td>
-                <td className="px-4 py-4">{user.contact}</td>
-                {/* <td className="px-4 py-4 text-right">
-                  <a
-                    className={`font-medium ${
-                      user.email === "admin@gmail.com"
-                        ? "text-gray-300"
-                        : "text-gray-400 :text-blue-500 cursor-pointer"
-                    }`}
-                    style={{
-                      pointerEvents:
-                        user.email === "admin@gmail.com" ? "none" : "auto",
-                    }}
+                  <td className="  px-3">
+                    <img
+                      src={user?.profileImage || userimage}
+                      alt="Profile Picture"
+                      className="w-[30px] h-[30px] rounded-full"
+                    />
+                  </td>
+                  <th
+                    scope="row"
+                    className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap :text-white"
                   >
-                    <EditIcon />
-                  </a>
-                </td> */}
-                <td className="px-3 py-4 text-right">
-                  <a
-                    onClick={() => handleClickOpen(user._id)}
-                    className={`font-medium ${
-                      user.email === "admin@gmail.com"
-                        ? "text-gray-300"
-                        : "text-red-600 :text-blue-500 cursor-pointer"
-                    }`}
-                    style={{
-                      pointerEvents:
-                        user.email === "admin@gmail.com" ? "none" : "auto",
-                    }}
-                  >
-                    <DeleteIcon />
-                  </a>
-                </td>
-              </tr>
-            ))
+                    {user.username}
+                  </th>
+                  <td className="px-4 py-4">{user.email}</td>
+                  <td className="px-4 py-4">{user.gender}</td>
+                  <td className="px-4 py-4">{user.ecoscore}</td>
+                  <td className="px-4 py-4">{user.address}</td>
+                  <td className="px-4 py-4">{user.contact}</td>
+                  <td className="px-3 py-4 text-right">
+                    <a
+                      onClick={() => handleClickOpen(user._id)}
+                      className={`font-medium text-red-600 :text-blue-500 cursor-pointer`}
+                    >
+                      <DeleteIcon />
+                    </a>
+                  </td>
+                </tr>
+              ))
           ) : (
             <div className="w-full text-md text-gray-600 font-semibold m-10 text-center">
               No registered user found!

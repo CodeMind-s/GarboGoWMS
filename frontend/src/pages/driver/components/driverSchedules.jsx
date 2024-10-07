@@ -45,7 +45,7 @@ function DriverSchedules(props) {
     return () => clearInterval(intervalId);
   }, [isLocationOn]);
 
-  const completeRoute = () =>{
+  const completeRoute = () => {
     setScheduleData((prevData) => {
       const updatedData = {
         ...prevData,
@@ -56,11 +56,14 @@ function DriverSchedules(props) {
 
       return updatedData;
     });
-  }
+  };
 
   const updateLocation = async (updatedScheduleData) => {
     try {
       await updateSchedule(updatedScheduleData, props.id);
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Error updating schedule details:", error);
     }
@@ -82,14 +85,20 @@ function DriverSchedules(props) {
           <div className="flex justify-end">
             {props.status === "Pending" && (
               <button
-                onClick={() => {setIsLocationOn(true); props.setTown(props.area);}}
+                onClick={() => {
+                  setIsLocationOn(true);
+                  props.setTown(props.area);
+                }}
                 className="mt-2 px-5 py-2 text-sm bg-white hover:opacity-80 border-2 border-[#2c7530] text-[#2c7530] font-semibold rounded-lg"
               >
                 Start Collection
               </button>
             )}
             {props.status === "In-Progress" && (
-              <button onClick={completeRoute} className="mt-2 px-5 py-2 text-sm bg-[#2c7530] text-white rounded-lg">
+              <button
+                onClick={completeRoute}
+                className="mt-2 px-5 py-2 text-sm bg-[#2c7530] text-white rounded-lg"
+              >
                 Complete Route
               </button>
             )}
